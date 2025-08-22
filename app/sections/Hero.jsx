@@ -29,7 +29,7 @@ export default function MainPrestamos({
   };
 
   return (
-    <main className="relative z-20 flex items-center min-h-screen bg-white overflow-hidden">
+    <main className="relative z-20 pt-28 md:pt-0 flex items-center min-h-screen bg-white overflow-hidden">
     
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between gap-16 relative">
@@ -61,7 +61,7 @@ export default function MainPrestamos({
         </div>
 
         {/* Columna visual (calculadora con glass + halo animado) */}
-        <div className="lg:w-1/2 flex justify-center floating">
+        <div className="w-[100%] lg:w-1/2 flex justify-center floating">
           <div className="relative w-full max-w-md">
             {/* Halo animado detrás de la calculadora */}
             <div className="absolute -inset-8 bg-gradient-to-br from-[#0389f7] via-[#0046ae] to-[#bf48e1] rounded-full opacity-40 blur-3xl animate-pulse-slow" />

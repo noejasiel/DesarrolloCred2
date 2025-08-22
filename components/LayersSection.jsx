@@ -15,7 +15,7 @@ export const LayersSection = ({
         <section className="panel w-full  h-screen flex items-center justify-center   text-4xl font-bold pt-[100px] md:pt-0 bg-[#f8f8f8]">
             <div className="min-h-screen flex items-center justify-between   md:pl-12  flex-col md:flex-row"
                 style={{
-                    backgroundColor: "#f8f8f8",
+                    backgroundColor: "#fafafa",
                     justifyContent: "space-between",
                     alignItems: "center",
                     height: "90vh",

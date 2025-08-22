@@ -137,22 +137,22 @@ export default function Header() {
         className="w-full px-6 py-1  fixed top-0 left-0 right-0 z-50"
         style={{  backdropFilter: 'blur(20px)', backgroundColor: '#ffffff59' }}
       >
-        <div className="max-w-[90%] mx-auto flex justify-start items-center gap-40">
+        <div className="max-w-[90%] mx-auto flex justify-between md:justify-between items-center gap-8 md:gap-16">
           {/* Logo */}
-          <div className="flex items-center flex-row">
+          <div className="flex items-center flex-row flex-shrink-0">
             <Link href="/" className="text-3xl font-bold text-[#088bf3] tracking-wider glow-text flex items-center gap-2 flex-row">
             <Image src="/logo.png" alt="Logo" width={80} height={80} />
-            <span className="text-lg font-bold text-[#088bf3] tracking-wider  flex items-center gap-2 flex-row"> DESARROLLO CREDITICIO EMPRESARIAL</span>
+            <span className="text-sm md:text-lg font-bold text-[#088bf3] tracking-wider flex items-center gap-2 flex-row whitespace-nowrap"> DESARROLLO CREDITICIO EMPRESARIAL</span>
             </Link>
           </div>
 
           {/* Navegación principal para pantallas grandes */}
-          <nav className="hidden md:flex items-center space-x-8 glass-effect px-6 py-3 rounded-full">
+          <nav className="hidden md:flex items-center space-x-6 glass-effect px-6 py-3 rounded-full flex-shrink-0">
             {navItems.map(item => (
               <Link
                 key={item}
                 href={item === 'Préstamos' ? '/' : item === 'Soluciones' ? '/about' : item === 'Para Empresas' ? '/about' : '/contact'}
-                className="text-black hover:text-gray-500 transition-colors font-medium"
+                className="text-black hover:text-gray-500 transition-colors font-medium whitespace-nowrap"
                 onClick={() => setActive(item)}
               >
                 {item}
@@ -168,9 +168,9 @@ export default function Header() {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             ref={menuButtonRef}
           >
-            <span className="block h-0.5 origin-center bg-white" />
-            <span className="block h-0.5 origin-center bg-white" />
-            <span className="block h-0.5 origin-center bg-white" />
+            <span className="block h-0.5 origin-center bg-black" />
+            <span className="block h-0.5 origin-center bg-black" />
+            <span className="block h-0.5 origin-center bg-black" />
           </button>
 
           {/* Menú móvil */}
@@ -178,14 +178,15 @@ export default function Header() {
             <div
               ref={mobileMenuRef}
               className="md:hidden fixed top-20 left-0 h-screen w-full shadow-lg p-4 z-50"
-              style={{  backdropFilter: 'blur(20px)' }}
+              style={{  backdropFilter: 'blur(20px)', background:"white" }}
             >
+              
               <div className="flex flex-col items-center justify-center h-full space-y-6">
                 {navItems.map(item => (
                   <Link
                     key={item}
                     href={item === 'Préstamos' ? '/' : item === 'Soluciones' ? '/about' : item === 'Para Empresas' ? '/about' : '/contact'}
-                    className="block py-3 px-6 text-lg text-white hover:text-[var(--gold-yellow)] transition-colors"
+                    className="block py-3 px-6 text-lg text-black hover:text-[var(--gold-yellow)] transition-colors"
                     onClick={() => {
                       setActive(item)
                       setIsMenuOpen(false)

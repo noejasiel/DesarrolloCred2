@@ -99,25 +99,27 @@ export default function Layers() {
     <main ref={main} className="min-h-screen">
       
       <LayersSection
-        title={{uno: "Rendimiento desde el", dos: "primer peso"}}
-        description="Recibe cada mes el 4% de rendimiento anual sobre tu saldo promedio mensual. Sin plazos forzosos ni montos mínimos."
-        image="/img1.webp"
+        title={{uno: "Te ayudamos a alcanzar", dos: "el éxito financiero"}}
+        description="Nuestros servicios financieros se basan en un profundo conocimiento del mercado y en la experiencia de nuestro equipo de profesionales altamente capacitados.
+
+Trabajaremos estrechamente contigo para comprender tus metas financieras y desarrollar estrategias que maximicen tus oportunidades de crecimiento y rentabilidad."
+        image="/imgRenew.png" 
         button="Descubre cómo solicitarlos"
         imageRefs={imageRefs}
         sectionRefs={sectionRefs}
         position={0}
       />
       <LayersSection
-        title={{uno: "Créditos empresariales", dos: "para tu negocio"}}
-        description="Solicita un crédito simple por hasta $5,000,000 MXN para tu empresa."
-        image="/img2.webp"
+        title={{uno: "Confianza y credibilidad", dos: "garantizada"}}
+        description="Construimos relaciones duraderas basadas en la transparencia total y resultados comprobables. Nuestro historial de éxito incluye años de experiencia en el sector financiero, respaldados por miles de clientes satisfechos y un equipo de expertos certificados que prioriza tu seguridad financiera."
+        image="/imgRenew2.png"
         button="Descubre cómo solicitarlos"
         imageRefs={imageRefs}
         sectionRefs={sectionRefs}
         position={1}
       />
 
-      <LayersSection
+     {/*  <LayersSection
         title={{uno: "Mucho más que una", dos: "cuenta"}}
         description="Administra todos los gastos de tu negocio fácilmente."
         image="/img3.webp"
@@ -125,7 +127,7 @@ export default function Layers() {
         imageRefs={imageRefs}
         sectionRefs={sectionRefs}
         position={2}
-      />
+      /> */}
 
     
     </main>

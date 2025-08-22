@@ -16,12 +16,12 @@ export default function ProductPitch() {
         tlRef.current = gsap.timeline({
             paused: true,
             onReverseComplete: () => tlRef.current.progress(0)
-        }); 
+        });
         
         // Añadir cada beneficio a la timeline con stagger
         benefitItems.current.forEach((item, index) => {
             tlRef.current.fromTo(item,
-                {  
+                {
                     opacity: 0,
                     y: 50
                 },
@@ -62,8 +62,12 @@ export default function ProductPitch() {
                     <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
                         Potencia tu empresa con <span className="text-[#0045ac]"> - DESARROLLO CREDITICIO EMPRESARIAL</span>
                     </h1>
-                    <p className="text-lg md:text-2xl text-gray-600 max-w-4xl mx-auto mb-10">
-                        Obtenemos el mejor crédito para tu empresa.
+                    <p className="text-sm md:text-lg text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed">
+                        Ayudamos a personas con <span className="text-[#0045ac] font-semibold">deudas</span> a encontrar <span className="text-[#0045ac] font-semibold">soluciones efectivas</span> a través de la <span className="text-[#0045ac] font-semibold">intermediación financiera</span>.
+                        <br /><br />
+                        Nos especializamos en la <span className="text-[#0045ac] font-semibold">colocación de créditos</span> en instituciones bancarias, actuando como puente entre quienes necesitan <span className="text-[#0045ac] font-semibold">apoyo económico</span> y quienes pueden brindarlo.
+                        <br /><br />
+                        Nuestro compromiso es ofrecer un servicio <span className="text-[#0045ac] font-semibold">ágil</span>, <span className="text-[#0045ac] font-semibold">transparente</span> y enfocado en el <span className="text-[#0045ac] font-semibold">bienestar financiero</span> de cada cliente.
                     </p>
                     <a className="bg-blue-600 text-white px-10 py-4 rounded-full hover:bg-blue-700 transition duration-300 text-lg font-semibold shadow-xl inline-flex items-center" href="#">
                         Quieres saber más?

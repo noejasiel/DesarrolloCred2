@@ -17,7 +17,7 @@ export default function HomePage() {
       <Hero />
       <ProductPitch />
       <Layers />
-      <PricingCard />
+     {/*  <PricingCard /> */}
       <Seguridad />
       <FAQSection />
       <ContactForm />
