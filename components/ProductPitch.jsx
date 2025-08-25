@@ -60,12 +60,12 @@ export default function ProductPitch() {
                 {/* Título */}
                 <div className="text-center">
                     <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-                        Potencia tu empresa con <span className="text-[#0045ac]"> - DESARROLLO CREDITICIO EMPRESARIAL</span>
+                        Potencia tu empresa con <span className="text-[#0045ac]"> - DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL</span>
                     </h1>
                     <p className="text-sm md:text-lg text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed">
-                        Ayudamos a personas con <span className="text-[#0045ac] font-semibold">deudas</span> a encontrar <span className="text-[#0045ac] font-semibold">soluciones efectivas</span> a través de la <span className="text-[#0045ac] font-semibold">intermediación financiera</span>.
+                        Ayudamos a personas con <span className="text-[#0045ac] font-semibold">deudas</span> a encontrar <span className="text-[#0045ac] font-semibold">soluciones efectivas</span>.
                         <br /><br />
-                        Nos especializamos en la <span className="text-[#0045ac] font-semibold">colocación de créditos</span> en instituciones bancarias, actuando como puente entre quienes necesitan <span className="text-[#0045ac] font-semibold">apoyo económico</span> y quienes pueden brindarlo.
+                        Nos especializamos en <span className="text-[#0045ac] font-semibold">créditos</span> en instituciones bancarias, actuando como puente entre quienes necesitan <span className="text-[#0045ac] font-semibold">apoyo económico</span> y quienes pueden brindarlo.
                         <br /><br />
                         Nuestro compromiso es ofrecer un servicio <span className="text-[#0045ac] font-semibold">ágil</span>, <span className="text-[#0045ac] font-semibold">transparente</span> y enfocado en el <span className="text-[#0045ac] font-semibold">bienestar financiero</span> de cada cliente.
                     </p>

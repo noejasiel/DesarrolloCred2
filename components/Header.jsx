@@ -142,7 +142,7 @@ export default function Header() {
           <div className="flex items-center flex-row flex-shrink-0">
             <Link href="/" className="text-3xl font-bold text-[#088bf3] tracking-wider glow-text flex items-center gap-2 flex-row">
             <Image src="/logo.png" alt="Logo" width={80} height={80} />
-            <span className="text-sm md:text-lg font-bold text-[#088bf3] tracking-wider flex items-center gap-2 flex-row whitespace-nowrap"> DESARROLLO CREDITICIO EMPRESARIAL</span>
+            <span className="text-sm md:text-lg font-bold text-[#088bf3] tracking-wider flex items-center gap-2 flex-row whitespace-nowrap"> DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL</span>
             </Link>
           </div>
 

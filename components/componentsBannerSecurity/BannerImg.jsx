@@ -58,7 +58,7 @@ export default function BannerImg() {
 
     // 3. ✨ PRIMER TEXTO - ULTRA LENTO 🐌
     gsap.fromTo(text1,
-      { y: '100vh', opacity: 0 },
+      { y: '100vh', opacity: 1 },
       {
         y: '-100vh',
         opacity: 1,
@@ -83,7 +83,7 @@ export default function BannerImg() {
 
     // 4. ✨ SEGUNDO TEXTO - ULTRA LENTO 🐌
     gsap.fromTo(text2,
-      { y: '200vh', opacity: 0 },
+      { y: '200vh', opacity: 1 },
       {
         y: '-100vh',
         opacity: 1,
@@ -189,29 +189,29 @@ export default function BannerImg() {
 
       <section
         ref={sectionRef}
-        className="relative h-screen bg-black flex items-center justify-center overflow-hidden"
+        className="relative h-screen bg-[#0141a5] flex items-center justify-center overflow-hidden"
       >
         <img
           ref={imageRef}
-          src="/imgBanner.jpg"
+          src="/imgBanner.png"
           alt="Banner"
           className="h-full object-contain"
         />
 
         {/* Contenedor de textos - ULTRA LENTO */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 text-white font-bold pointer-events-none mix-blend-difference">
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 text-white font-bold pointer-events-none">
           <div
             ref={text1Ref}
-            className="absolute text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px] text-center leading-tight"
-            style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}
+            className="absolute text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px] text-center text-white font-bold"
+            style={{ color: '#ffffff' }}
           >
             + 30,000,000,000 MXN<br />
             <span className="text-2xl md:text-4xl opacity-80">VOLUMEN TOTAL</span>
           </div>
           <div
             ref={text2Ref}
-            className="absolute text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px] text-center leading-tight text-cyan-400"
-            style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}
+            className="absolute text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px] text-center text-white font-bold"
+            style={{ color: '#ffffff' }}
           >
             + 450,000<br />
             <span className="text-2xl md:text-4xl opacity-80">CLIENTES ACTIVOS</span>
