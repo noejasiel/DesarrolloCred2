@@ -221,7 +221,7 @@ export default function Testimonials() {
                 </div>
 
                 {/* Carrusel infinito de Testimonios */}
-                <div className="relative  mb-16">
+                <div className="relative overflow-x-clip mb-16">
                     <div 
                         ref={carouselRef}
                         className="flex gap-8 transition-transform duration-300 ease-out"

@@ -91,7 +91,6 @@ export default function LayerLast() {
               start: 'top 70%',
               end: 'top 10%',
               scrub: 2,
-              markers: true,
             },
             duration: 6, // Aumentado de 3 a 6 segundos
             y: 90,
