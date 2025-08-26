@@ -9,6 +9,7 @@ import LayerLast from '../sections/LayerLast'
 import Footer from '../sections/Footer'
 import ContactForm from '../sections/Contact'
 import Seguridad from '../../components/BannerSecurity'
+import Testimonials from '../../components/Testimonials'
 
 
 export default function HomePage() {
@@ -19,6 +20,7 @@ export default function HomePage() {
       <Layers />
      {/*  <PricingCard /> */}
       <Seguridad />
+      <Testimonials />
       <FAQSection />
       <ContactForm />
       <LayerLast />

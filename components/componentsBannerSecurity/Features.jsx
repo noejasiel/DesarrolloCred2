@@ -7,7 +7,7 @@ export default function FeaturesBanner() {
  
 
   return (
-    <section className="relative bg-black text-white py-20 px-6 md:px-20 overflow-hidden">
+    <section className="relative bg-[#0141a5] text-white py-20 px-6 md:px-20 overflow-hidden">
       <h2 className="text-4xl md:text-6xl font-bold mb-16">
         La seguridad de tu dinero es nuestra prioridad
       </h2>

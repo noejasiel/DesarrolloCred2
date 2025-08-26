@@ -11,6 +11,8 @@ export default function BannerImg() {
   const text2Ref = useRef(null);
   const scrollWordsRef = useRef([]);
   const scrollTextRef = useRef(null);
+  const num1Ref = useRef(null);
+  const num2Ref = useRef(null);
 
 
  
@@ -31,7 +33,7 @@ export default function BannerImg() {
       scrollTrigger: {
         trigger: section,
         start: 'top 60px',
-        end: '+=10000', // 🔥 DUPLICAMOS el espacio para más lentitud
+        end: '+=4000', // 🔥 REDUCIDO de 10000 a 4000 para más velocidad
         scrub: true,
         pin: true,
         anticipatePin: 1,
@@ -56,7 +58,7 @@ export default function BannerImg() {
       }
     );
 
-    // 3. ✨ PRIMER TEXTO - ULTRA LENTO 🐌
+    // 3. ✨ PRIMER TEXTO - MÁS RÁPIDO 🚀
     gsap.fromTo(text1,
       { y: '100vh', opacity: 1 },
       {
@@ -65,15 +67,15 @@ export default function BannerImg() {
         scrollTrigger: {
           trigger: section,
           start: 'top 60px',
-          end: '+=6000', // Primera mitad del scroll total
+          end: '+=2000', // 🔥 REDUCIDO de 6000 a 2000 para más velocidad
           scrub: (progress) => {
-            // 🔥 VALORES EXTREMOS PARA LENTITUD BRUTAL
+            // 🔥 VALORES MÁS RÁPIDOS
             if (progress >= 0.2 && progress <= 0.8) {
-              return 200; // 🐌 ULTRA MEGA LENTO - scroll casi parado
+              return 50; // 🚀 Más rápido - antes era 200
             } else if (progress >= 0.1 && progress <= 0.9) {
-              return 150; // Muy muy lento en transición
+              return 30; // Más rápido en transición - antes era 150
             } else {
-              return 80; // Lento en extremos
+              return 20; // Más rápido en extremos - antes era 80
             }
           },
         },
@@ -81,7 +83,7 @@ export default function BannerImg() {
       }
     );
 
-    // 4. ✨ SEGUNDO TEXTO - ULTRA LENTO 🐌
+    // 4. ✨ SEGUNDO TEXTO - MÁS RÁPIDO 🚀
     gsap.fromTo(text2,
       { y: '200vh', opacity: 1 },
       {
@@ -90,9 +92,9 @@ export default function BannerImg() {
         scrollTrigger: {
           trigger: section,
           start: 'top 60px',
-          end: '+=12000', // Todo el scroll
+          end: '+=4000', // 🔥 REDUCIDO de 12000 a 4000 para más velocidad
           scrub: (progress) => {
-            // El segundo texto SOLO se activa en la segunda mitad (50% - 100%)
+            // 🔥 ARREGLADO: El segundo texto SOLO se activa después del 50% del scroll total
             if (progress < 0.5) {
               return false; // NO SE MUEVE en la primera mitad
             }
@@ -100,13 +102,13 @@ export default function BannerImg() {
             // Convertir 50%-100% a 0%-100% para la lógica del segundo texto
             const secondProgress = (progress - 0.5) / 0.5;
 
-            // 🔥 VALORES EXTREMOS PARA LENTITUD BRUTAL
+            // 🔥 VALORES MÁS RÁPIDOS
             if (secondProgress >= 0.2 && secondProgress <= 0.8) {
-              return 250; // 🐌 INCLUSO MÁS LENTO QUE EL PRIMERO
+              return 60; // 🚀 Más rápido - antes era 250
             } else if (secondProgress >= 0.1 && secondProgress <= 0.9) {
-              return 180; // Extremadamente lento en transición
+              return 40; // Más rápido en transición - antes era 180
             } else {
-              return 100; // Muy lento en extremos
+              return 25; // Más rápido en extremos - antes era 100
             }
           },
           onUpdate: (self) => {
@@ -173,6 +175,79 @@ export default function BannerImg() {
           ease: 'power2.out'
         }, index * 0.3);
       });
+
+      // ---- Conteo numérico al entrar en pantalla ----
+      const formatNumber = (value) => new Intl.NumberFormat('es-MX').format(value);
+
+      const animateCount = (element, toValue, durationSeconds) => {
+        if (!element) return;
+        const counter = { val: 0 };
+        gsap.to(counter, {
+          val: toValue,
+          duration: durationSeconds,
+          ease: 'power1.out',
+          onUpdate: () => {
+            element.textContent = formatNumber(Math.floor(counter.val));
+          }
+        });
+      };
+
+      const resetCount = (element) => {
+        if (!element) return;
+        element.textContent = '0';
+      };
+
+      let count2Done = false; // 🔥 AGREGADO: Variable necesaria para el segundo contador
+
+      // 🔥 ARREGLADO: ScrollTrigger para el primer contador (1,000,000) - CON REINICIO
+      ScrollTrigger.create({
+        trigger: text1,
+        start: 'top 95%',
+        end: 'bottom 5%',
+        onEnter: () => {
+          animateCount(num1Ref.current, 1000000, 2.5);
+        },
+        onLeave: () => {
+          resetCount(num1Ref.current);
+        },
+        onEnterBack: () => {
+          animateCount(num1Ref.current, 1000000, 2.5);
+        },
+        onLeaveBack: () => {
+          resetCount(num1Ref.current);
+        }
+      });
+
+      // 🔥 ARREGLADO: ScrollTrigger para el segundo contador (1,000) - CON REINICIO
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top 60px',
+        end: '+=4000',
+        onUpdate: (self) => {
+          const progress = self.progress;
+          
+          // SOLO activar cuando estemos en la segunda mitad (50% - 100%)
+          if (progress >= 0.5) {
+            if (!count2Done) {
+              count2Done = true;
+              animateCount(num2Ref.current, 1000, 1.8);
+            }
+          } else {
+            // Si volvemos a la primera mitad, reiniciamos
+            if (count2Done) {
+              count2Done = false;
+              resetCount(num2Ref.current);
+            }
+          }
+        },
+        onLeave: () => {
+          resetCount(num2Ref.current);
+          count2Done = false;
+        },
+        onEnterBack: () => {
+          count2Done = false;
+        }
+      });
   
 
     return () => {
@@ -181,10 +256,10 @@ export default function BannerImg() {
   }, []);
 
   return (
-    <div className="bg-black text-white min-h-screen">
+    <div className="bg-[#0141a5] text-white min-h-screen">
     
     <div className="h-[80vh] flex items-center justify-center">
-        <h1 ref={scrollTextRef} className=" font-bold   text-2xl md:text-6xl   sm:text-6xl  lg:text-6xl xl:text-[64px]">Scroll hacia abajo</h1>
+        <h1 ref={scrollTextRef} className=" font-bold   text-2xl md:text-6xl   sm:text-6xl  lg:text-6xl xl:text-[64px]">Revisa nuestros numeros</h1>
       </div>
 
       <section
@@ -205,16 +280,16 @@ export default function BannerImg() {
             className="absolute text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px] text-center text-white font-bold"
             style={{ color: '#ffffff' }}
           >
-            + 30,000,000,000 MXN<br />
-            <span className="text-2xl md:text-4xl opacity-80">VOLUMEN TOTAL</span>
+            + <span ref={num1Ref}>0</span> MXN<br />
+            <span className="text-2xl md:text-4xl opacity-80">EN CREDITOS</span>
           </div>
           <div
             ref={text2Ref}
             className="absolute text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px] text-center text-white font-bold"
             style={{ color: '#ffffff' }}
           >
-            + 450,000<br />
-            <span className="text-2xl md:text-4xl opacity-80">CLIENTES ACTIVOS</span>
+            + <span ref={num2Ref}>0</span><br />
+            <span className="text-2xl md:text-4xl opacity-80">CLIENTES SATISFECHOS</span>
           </div>
         </div>
       </section>
