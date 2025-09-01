@@ -1,407 +1,316 @@
 'use client';
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "../../components/buttonContact";
-import { Input } from "../../components/inputContact";
-import { Textarea } from "../../components/textareaContact";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/selectConatc";
-import { Checkbox } from "../../components/checkboxContact";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../../components/formContact";
-import { Star, Loader2 } from "lucide-react";
-import "./dynamic-bg.css";
-
-const fadeInDown = {
-  animation: 'fadeInDown 0.5s ease-out forwards',
-};
-
-const fadeOutUp = {
-  animation: 'fadeOutUp 0.5s ease-out forwards',
-};
+import { Star, Loader2, CheckCircle, CreditCard, Shield, Users } from "lucide-react";
+import Image from "next/image";
 
 export default function ContactForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [showSuccessShadow, setShowSuccessShadow] = useState(false);
-  const [showErrorShadow, setShowErrorShadow] = useState(false);
-
-  const form = useForm({
-    defaultValues: {
+  const [formData, setFormData] = useState({
       fullName: "",
+    amount: "",
+    city: "",
+    phone: "",
       email: "",
-      phone: "",
-      company: "",
-      inquiryType: "",
       message: "",
-      privacyAgreed: "false",
-    },
-  });
+  })
 
-  const onSubmit = async (data) => {
-    if (isButtonDisabled) {
-      setErrorMessage("Por favor espera un momento antes de intentar nuevamente.");
-      setShowErrorShadow(true);
-      setTimeout(() => {
-        setShowErrorShadow(false);
-      }, 2000);
-      return;
+  const [errors, setErrors] = useState({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const validateForm = () => {
+    const newErrors = {}
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = "El nombre completo es obligatorio"
     }
 
+    if (!formData.amount.trim()) {
+      newErrors.amount = "La cantidad es obligatoria"
+    } else if (isNaN(Number(formData.amount)) || Number(formData.amount) <= 0) {
+      newErrors.amount = "Ingresa una cantidad válida"
+    }
 
-    setIsSubmitting(true);
-    setSuccessMessage("");
-    setErrorMessage("");
-    setIsButtonDisabled(true);
-    setShowSuccessShadow(false);
-    setShowErrorShadow(false);
+    if (!formData.city.trim()) {
+      newErrors.city = "La ciudad es obligatoria"
+    }
 
+    if (!formData.phone.trim()) {
+      newErrors.phone = "El teléfono es obligatorio"
+    } else if (!/^\d{10}$/.test(formData.phone.replace(/\s/g, ""))) {
+      newErrors.phone = "Ingresa un teléfono válido (10 dígitos)"
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "El correo electrónico es obligatorio"
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Ingresa un correo electrónico válido"
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = "El mensaje es obligatorio"
+    } else if (formData.message.length < 10) {
+      newErrors.message = "El mensaje debe tener al menos 10 caracteres"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: "" }))
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!validateForm()) {
+      return
+    }
+
+    setIsSubmitting(true)
+
+    // Simulate API call
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      await new Promise((resolve) => setTimeout(resolve, 2000))
 
-      if (response.ok) {
-        form.reset();
-        setSuccessMessage("¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.");
-        setShowSuccessShadow(true);
-        setIsSubmitting(false);
-        setTimeout(() => {
-          setSuccessMessage("");
-          setIsButtonDisabled(false);
-          setShowSuccessShadow(false);
-        }, 3000);
-      } else {
-        throw new Error("Error enviando el correo");
-      }
+      // Reset form
+      setFormData({
+        fullName: "",
+        amount: "",
+        city: "",
+        phone: "",
+        email: "",
+        message: "",
+      })
     } catch (error) {
-      console.error("Error al enviar el formulario:", error);
-      setErrorMessage("Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.");
-      setShowErrorShadow(true);
-      setIsSubmitting(false);
-      setTimeout(() => {
-        setErrorMessage("");
-        setIsButtonDisabled(false);
-        setShowErrorShadow(false);
-      }, 2000);
+      console.error("Error al enviar el formulario:", error)
+    } finally {
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
-  
-      <section
-      id="contact-form" className="dynamic-container">
-      
-        {/* Fondos animados estilo glow */}
-        <div className="glow-circle glow-white" style={{ top: "5%", left: "10%", width: "300px", height: "300px" }} />
-        <div className="glow-circle glow-gray" style={{ bottom: "10%", right: "5%", width: "400px", height: "400px", animationDelay: "2s" }} />
-        <div className="glow-circle glow-outline" style={{ top: "50%", left: "40%", width: "200px", height: "200px", animationDelay: "5s" }} />
-       
-
-        <div className="bg-fade-bottom"></div>
-        <div className="dynamic-content">
-          <div className="absolute inset-0 ">
-            <div className="absolute top-10 right-20 w-64 h-64 modern-gradient rounded-full opacity-10 blur-3xl floating-animation"></div>
-            <div
-              className="absolute bottom-10 left-20 w-80 h-80 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full opacity-5 blur-3xl floating-animation"
-              style={{ animationDelay: "3s" }}
-            ></div>
-          </div>
-
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-6">
-                <Star className="w-4 h-4 text-yellow-400 mr-2" />
-                <span className="text-sm text-white/80">
+    <section id="contact-form" className="relative py-20 px-4 sm:px-6 lg:px-8" style={{
+      backgroundImage: "url('/contact.jpeg')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat"
+    }}>
+      {/* Overlay para mejorar la legibilidad */}
+      <div className="absolute inset-0 bg-white/80"></div>
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Título de la sección - MANTENIENDO EL ESTILO ORIGINAL */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-[#0045ac]/10 backdrop-blur-sm border border-[#0045ac]/20 mb-6">
+            <Star className="w-4 h-4 text-[#0045ac] mr-2" />
+            <span className="text-sm text-[#0045ac] font-medium">
                   Respuesta garantizada en 2 horas
                 </span>
               </div>
 
-              <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white">
-                Cuéntanos cómo podemos<br />
-                <span className="gradient-text">ayudarte</span>
+          <h2 className="text-3xl lg:text-5xl font-bold mb-6 text-[#0045ac]">
+            ¿Listo para obtener tu <span className="text-[#003a8c]">crédito ideal</span>?
               </h2>
-              <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-                Completa el formulario y nos pondremos en contacto contigo con una
-                solución personalizada
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Completa el formulario y nuestro equipo de especialistas se pondrá en contacto contigo 
+            para ofrecerte la mejor solución crediticia según tu perfil
               </p>
             </div>
 
-            <div className={`rounded-3xl p-8 lg:p-12 bg-[#3b3a39]/20 backdrop-blur-md border-white/10 transition-all duration-500 ${
-              showSuccessShadow ? 'shadow-[0_0_10px_rgba(124,58,237,0.7)]' : 
-              showErrorShadow ? 'shadow-[0_0_10px_rgba(239,68,68,0.7)]' : ''
-            }`}>
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Left Column - Information */}
+          <div className="space-y-8">
+            <div className="bg-white rounded-2xl shadow-lg border-0 p-6 md:p-8">
+              <div className="pb-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 bg-[#0045ac]/10 rounded-lg">
+                    <CreditCard className="h-6 w-6 text-[#0045ac]" />
+                  </div>
+                  <h3 className="text-2xl text-gray-900 font-semibold">Asesoría Crediticia</h3>
+                </div>
+                <p className="text-lg text-gray-600">
+                  ¿Tienes dudas y necesitas una solución real?
+                </p>
+              </div>
+              <div className="space-y-6">
+                <p className="text-gray-700 leading-relaxed">
+                  Nos especializamos en colocar tus créditos en instituciones bancarias confiables, facilitando opciones
+                  que se adaptan a tu situación.
+                </p>
+                <p className="text-gray-700 leading-relaxed">
+                  Completa el formulario y un asesor se pondrá en contacto contigo para ayudarte a tomar el mejor camino
+                  financiero.
+                </p>
 
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Espacio reservado para los mensajes */}
-                  <div className="h-16">
-                    {successMessage && (
-                      <div className="animate-fade-in-down">
-                        <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 backdrop-blur-md border border-purple-500/30 rounded-xl text-purple-300 px-6 py-3 shadow-lg text-center">
-                          {successMessage}
+                {/* Benefits */}
+                <div className="space-y-4 pt-4">
+                  <h4 className="font-semibold text-gray-900 flex items-center gap-2">
+                    <Shield className="h-5 w-5 text-green-600" />
+                    Nuestros beneficios
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <span className="text-gray-700">Análisis personalizado de tu perfil</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <span className="text-gray-700">Asesoría personalizada a tu medida</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <span className="text-gray-700">Respuesta rapida</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <span className="text-gray-700">Opciones adaptadas a tu perfil</span>
+                    </div>
                         </div>
                       </div>
-                    )}
-                    {errorMessage && (
-                      <div className="animate-fade-in-down">
-                        <div className="bg-gradient-to-r from-red-600/10 to-rose-600/10 backdrop-blur-md border border-red-500/30 rounded-xl text-red-300 px-6 py-3 shadow-lg text-center">
-                          {errorMessage}
+
+                {/* Trust indicators */}
+                <div className="flex items-center gap-4 pt-4 border-t">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-[#0045ac]" />
+                    <span className="text-sm text-gray-600">+1,000 clientes satisfechos</span>
+                  </div>
+                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">
+                    Confiable
+                  </span>
+                </div>
                         </div>
                       </div>
-                    )}
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Nombre */}
-                    <FormField
-                      control={form.control}
-                      name="fullName"
-                      rules={{
-                        required: "El nombre es obligatorio",
-                        minLength: {
-                          value: 2,
-                          message: "El nombre debe tener al menos 2 caracteres",
-                        },
-                      }}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-white mb-2 block ra ">
-                            Nombre completo *
-                          </FormLabel>
-                          <FormControl>
-                            <Input
+          {/* Right Column - Form */}
+          <div>
+            <div className="bg-white rounded-2xl shadow-xl border-0 p-6 md:p-8">
+              <div className="mb-6">
+                <h3 className="text-xl text-gray-900 font-semibold mb-2">Solicita tu asesoría gratuita</h3>
+                <p className="text-gray-600">Completa todos los campos para recibir atención personalizada</p>
+              </div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="fullName" className="text-sm font-medium text-[#0045ac]">
+                      Nombre completo <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id="fullName"
+                      type="text"
+                      value={formData.fullName}
+                      onChange={(e) => handleInputChange("fullName", e.target.value)}
                               placeholder="Tu nombre completo"
-                              className="form-input rounded-3xl"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      className={`w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0045ac]/20 focus:border-[#0045ac] ${errors.fullName ? "border-red-500" : "border-gray-300"}`}
                     />
-
-                    {/* Email */}
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      rules={{
-                        required: "El correo es obligatorio",
-                        pattern: {
-                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                          message: "Correo inválido",
-                        },
-                      }}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-white mb-2 block">
-                            Correo electrónico *
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              placeholder="tu@email.com"
-                              className="form-input"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {errors.fullName && <p className="text-sm text-red-600">{errors.fullName}</p>}
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Teléfono */}
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      rules={{
-                        pattern: {
-                          value: /^\+?\d{1,3}[-\s]?\d{1,4}[-\s]?\d{1,4}[-\s]?\d{1,4}$/,
-                          message: "Teléfono inválido",
-                        },
-                      }}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-white mb-2 block">
-                            Teléfono
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="tel"
-                              placeholder="+52 55 1234 5678"
-                              className="form-input"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                  <div className="space-y-2">
+                    <label htmlFor="amount" className="text-sm font-medium text-[#0045ac]">
+                      Cantidad que necesitas <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id="amount"
+                      type="text"
+                      value={formData.amount}
+                      onChange={(e) => handleInputChange("amount", e.target.value)}
+                      placeholder="$0.00"
+                      className={`w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0045ac]/20 focus:border-[#0045ac] ${errors.amount ? "border-red-500" : "border-gray-300"}`}
                     />
-
-                    {/* Empresa */}
-                    <FormField
-                      control={form.control}
-                      name="company"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-sm font-medium text-white mb-2 block">
-                            Empresa
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Nombre de tu empresa"
-                              className="form-input"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {errors.amount && <p className="text-sm text-red-600">{errors.amount}</p>}
+                  </div>
                   </div>
 
-                  {/* Asunto */}
-                  <FormField
-                    control={form.control}
-                    name="inquiryType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-white mb-2 block">
-                          Asunto
-                        </FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="form-input">
-                              <SelectValue placeholder="Selecciona un asunto" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="bg-slate-800 border-white/0">
-                            <SelectItem value="cuenta-empresarial">Cuenta empresarial</SelectItem>
-                            <SelectItem value="credito-empresarial">Crédito empresarial</SelectItem>
-                            <SelectItem value="tarjeta-debito">Tarjeta de débito</SelectItem>
-                            <SelectItem value="soporte-tecnico">Soporte técnico</SelectItem>
-                            <SelectItem value="otro">Otro</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="city" className="text-sm font-medium text-[#0045ac]">
+                      Ciudad <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id="city"
+                      type="text"
+                      value={formData.city}
+                      onChange={(e) => handleInputChange("city", e.target.value)}
+                      placeholder="Tu ciudad"
+                      className={`w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0045ac]/20 focus:border-[#0045ac] ${errors.city ? "border-red-500" : "border-gray-300"}`}
+                    />
+                    {errors.city && <p className="text-sm text-red-600">{errors.city}</p>}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="phone" className="text-sm font-medium text-[#0045ac]">
+                      Teléfono <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      id="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      placeholder="10 dígitos"
+                      className={`w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0045ac]/20 focus:border-[#0045ac] ${errors.phone ? "border-red-500" : "border-gray-300"}`}
+                    />
+                    {errors.phone && <p className="text-sm text-red-600">{errors.phone}</p>}
+                  </div>
+                  </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium text-[#0045ac]">
+                    Correo electrónico <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    placeholder="tu@email.com"
+                    className={`w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0045ac]/20 focus:border-[#0045ac] ${errors.email ? "border-red-500" : "border-gray-300"}`}
                   />
+                  {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
+                </div>
 
-
-                  {/* Mensaje */}
-                  <FormField
-                    control={form.control}
-                    name="message"
-                    rules={{
-                      required: "El mensaje es obligatorio",
-                      minLength: {
-                        value: 10,
-                        message: "El mensaje debe tener al menos 10 caracteres",
-                      },
-                    }}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-white mb-2 block">
-                          Mensaje *
-                        </FormLabel>
-                        <FormControl>
-                          <Textarea
+                <div className="space-y-2">
+                  <label htmlFor="message" className="text-sm font-medium text-[#0045ac]">
+                    Mensaje <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    id="message"
+                    value={formData.message}
+                    onChange={(e) => handleInputChange("message", e.target.value)}
+                    placeholder="Cuéntanos sobre tu situación financiera y qué tipo de crédito necesitas..."
                             rows={4}
-                            placeholder="Describe tu consulta o necesidad..."
-                            className="form-input resize-none"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    className={`w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0045ac]/20 focus:border-[#0045ac] resize-none ${errors.message ? "border-red-500" : "border-gray-300"}`}
                   />
-
-                  {/* Privacidad */}
-                  <FormField
-                    control={form.control}
-                    name="privacyAgreed"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                        <FormControl>
-                          <input
-                            type="checkbox"
-                            checked={field.value === "true"}
-                            onChange={(e) => field.onChange(e.target.checked ? "true" : "false")}
-                            className="h-4 w-4 rounded border-white/20 text-purple-500 focus:ring-purple-500"
-                          />
-                        </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel className="text-sm text-gray-300">
-                            Acepto los{" "}
-                            <a
-                              href="#"
-                              className="text-purple-400 underline hover:text-purple-300"
-                            >
-                              términos y condiciones
-                            </a>{" "}
-                            y la{" "}
-                            <a
-                              href="#"
-                              className="text-purple-400 underline hover:text-purple-300"
-                            >
-                              política de privacidad
-                            </a>{" "}
-                            *
-                          </FormLabel>
+                  {errors.message && <p className="text-sm text-red-600">{errors.message}</p>}
                         </div>
-                        <FormMessage className="text-red-400" />
-                      </FormItem>
-                    )}
-                  />
 
-                  {/* Botón de envío */}
-                  <div className="pt-4">
-                    <Button
+                <button
                       type="submit"
-                      variant="gradientSoft"
-                      disabled={isSubmitting }
-                      className="w-full rounded-xl py-4 text-lg font-medium transition-all duration-300"
+                  className="w-full bg-[#0045ac] hover:bg-[#003a8c] text-white py-3 text-lg font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  disabled={isSubmitting}
                     >
                       {isSubmitting ? (
-                        <div className="flex items-center justify-center gap-2">
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          Enviando...
-                        </div>
-                      ) : (
-                        "Enviar mensaje"
-                      )}
-                    </Button>
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin inline" />
+                      Enviando solicitud...
+                    </>
+                  ) : (
+                    "Solicitar asesoría crediticia"
+                  )}
+                </button>
 
-                  </div>
-
+                <p className="text-sm text-gray-500 text-center">
+                  Al enviar este formulario, aceptas que nos pongamos en contacto contigo para brindarte información
+                  sobre nuestros servicios.
+                </p>
                 </form>
-              </Form>
-
             </div>
           </div>
         </div>
-
-    </section >
-  );
+      </div>
+    </section>
+  )
 }

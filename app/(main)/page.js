@@ -10,6 +10,7 @@ import Footer from '../sections/Footer'
 import ContactForm from '../sections/Contact'
 import Seguridad from '../../components/BannerSecurity'
 import Testimonials from '../../components/Testimonials'
+import CreditCards from '../../components/CreditCards'
 
 
 export default function HomePage() {
@@ -18,7 +19,8 @@ export default function HomePage() {
       <Hero />
       <ProductPitch />
       <Layers />
-     {/*  <PricingCard /> */}
+      <CreditCards />
+  {/*      <PricingCard />  */}
       <Seguridad />
       <Testimonials />
       <FAQSection />

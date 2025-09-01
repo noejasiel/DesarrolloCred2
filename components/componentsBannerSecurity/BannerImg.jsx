@@ -278,18 +278,18 @@ export default function BannerImg() {
           <div
             ref={text1Ref}
             className="absolute text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px] text-center text-white font-bold"
-            style={{ color: '#ffffff' }}
+            style={{ color: '#ffffff', fontSize: 'calc(100vw * .078)' }}
           >
             + <span ref={num1Ref}>0</span> MXN<br />
-            <span className="text-2xl md:text-4xl opacity-80">EN CREDITOS</span>
+            <span className="text-2xl md:text-4xl opacity-80" style={{ fontSize: 'calc(100vw * .044)' }}>EN CREDITOS</span>
           </div>
           <div
             ref={text2Ref}
             className="absolute text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px] text-center text-white font-bold"
-            style={{ color: '#ffffff' }}
+            style={{ color: '#ffffff', fontSize: 'calc(100vw * .078)' }}
           >
             + <span ref={num2Ref}>0</span><br />
-            <span className="text-2xl md:text-4xl opacity-80">CLIENTES SATISFECHOS</span>
+            <span className="text-2xl md:text-4xl opacity-80" style={{ fontSize: 'calc(100vw * .044)' }}>CLIENTES SATISFECHOS</span>
           </div>
         </div>
       </section>

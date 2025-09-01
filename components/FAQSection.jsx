@@ -4,27 +4,28 @@ import gsap from 'gsap';
 
 const faqs = [
   {
-    question: "¿Quién puede abrir una cuenta FONDEA | Empresarial?",
-    answer: "Cualquier empresa legalmente constituida en México puede abrir una cuenta empresarial."
+    question: "¿Qué tipos de créditos pueden ayudarme a obtener?",
+    answer: "Ofrecemos asesoría para obtener créditos personales, empresariales, hipotecarios, agrícolas y de negocio. Te ofrecemos las condiciones más favorables según tu perfil."
   },
   {
-    question: "¿Qué documentos necesito para abrir mi cuenta?",
-    answer: "Necesitas tu RFC, acta constitutiva, identificación oficial del representante legal y comprobante de domicilio."
+    question: "¿Qué documentos necesito para solicitar un crédito?",
+    answer: "Los documentos varían según el tipo de crédito, pero generalmente necesitas: identificación oficial, comprobantes de ingresos, estados de cuenta bancarios, comprobante de domicilio y RFC. Te guiaremos paso a paso con los requisitos específicos."
   },
   {
-    question: "¿Cualquier persona de la empresa puede abrir una cuenta?",
-    answer: "No, se requiere que la persona que abra la cuenta tenga los poderes legales necesarios para realizar actos administrativos que le permitan aperturar una cuenta bancaria."+
-    "No, se requiere que la persona que abra la cuenta tenga los poderes legales necesarios para realizar actos administrativos que le permitan aperturar una cuenta bancaria." +
-    "No, se requiere que la persona que abra la cuenta tenga los poderes legales necesarios para realizar actos administrativos que le permitan aperturar una cuenta bancaria." +
-    "No, se requiere que la persona que abra la cuenta tenga los poderes legales necesarios para realizar actos administrativos que le permitan aperturar una cuenta bancaria."
+    question: "¿Cuánto tiempo tarda el proceso de aprobación?",
+    answer: "El tiempo de aprobación depende del tipo de crédito y la institución financiera. Los créditos personales pueden aprobarse en 24-48 horas, mientras que los hipotecarios pueden tardar de 7 a 15 días hábiles. Te mantendremos informado durante todo el proceso."
   },
   {
-    question: "¿Cuánto tiempo tardan en abrirme una cuenta?",
-    answer: "Menos de 48 horas hábiles después de enviar todos los documentos."
+    question: "¿Qué ventajas tengo al usar sus servicios?",
+    answer: "Nuestro equipo especializado analiza tu perfil crediticio, compara opciones de múltiples bancos, negocia las mejores condiciones y te acompaña durante todo el proceso. Esto te ahorra tiempo y te garantiza obtener las tasas más competitivas del mercado."
   },
   {
-    question: "¿Puedo tener más de una cuenta?",
-    answer: "Sí, puedes tener cuentas múltiples para diferentes usos empresariales."
+    question: "¿Cobran comisiones por sus servicios?",
+    answer: "Nuestros honorarios son transparentes y se basan en el éxito de la gestión. Solo cobramos cuando logramos que se apruebe tu crédito con las condiciones acordadas. No hay costos ocultos ni sorpresas."
+  },
+  {
+    question: "¿Pueden ayudarme si tengo mal historial crediticio?",
+    answer: "Sí, especializamos en ayudar a personas con deudas a encontrar soluciones efectivas. Analizamos tu situación particular y trabajamos con instituciones que ofrecen opciones de rehabilitación crediticia y segundas oportunidades."
   },
 ];
 
@@ -105,21 +106,21 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="bg-white py-16 px-4 md:px-12 lg:px-24">
-      <h2 className="font-semibold text-black mb-12 text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px]">
+    <section className="bg-gradient-to-br from-[#f8f8f8] to-white py-16 px-4 md:px-12 lg:px-24">
+      <h2 className="font-semibold text-[#0045ac] mb-12 text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px]">
         Preguntas frecuentes
       </h2>
 
       <div className="space-y-4">
         {faqs.map((faq, index) => (
-          <div key={index} className="border-b border-gray-300 pb-4">
+          <div key={index} className="border-b border-[#0045ac]/20 pb-4 bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
             <button
-              className="w-full flex justify-between items-center text-left text-black text-lg md:text-xl font-medium focus:outline-none"
+              className="w-full flex justify-between items-center text-left text-[#0045ac] text-lg md:text-xl font-semibold focus:outline-none hover:text-[#003a8c] transition-colors duration-300"
               onClick={() => toggleAnswer(index)}
             >
               {faq.question}
               <svg
-                className={`w-6 h-6 transform transition-transform duration-300 ${
+                className={`w-6 h-6 transform transition-transform duration-300 text-[#0045ac] ${
                   openIndex === index ? 'rotate-45' : ''
                 }`}
                 fill="none"
@@ -133,7 +134,7 @@ export default function FAQSection() {
 
             <div
               ref={(el) => (answerRefs.current[index] = el)}
-              className="overflow-hidden text-gray-600 text-base md:text-lg"
+              className="overflow-hidden text-gray-700 text-base md:text-lg leading-relaxed"
             >
               {faq.answer}
             </div>
@@ -141,11 +142,11 @@ export default function FAQSection() {
         ))}
       </div>
 
-      <div className="mt-10">
-        <a href="#" className="text-black underline text-lg font-medium">
+     {/*  <div className="mt-10 text-center">
+        <a href="#" className="text-[#0045ac] hover:text-[#003a8c] underline text-lg font-semibold transition-colors duration-300">
           Ver todas las preguntas →
         </a>
-      </div>
+      </div> */}
     </section>
   );
 }
