@@ -31,7 +31,7 @@ export const LayersSection = ({
             >
                 {/* Texto */}
                 <div className="w-[100%] md:w-[50%] text-left z-10 px-6">
-                    <h1 className=" font-bold text-black mb-4 text-left bg-[#f8f8f8] text-2xl md:text-6xl   sm:text-6xl  lg:text-6xl xl:text-[64px]"
+                    <h1 className=" font-bold text-black mb-4 text-left bg-[#f8f8f8] text-4xl md:text-8xl   sm:text-8xl  lg:text-8xl xl:text-[96px]"
                         style={{
                             color: 'black',
                             letterSpacing: '0.4px',
@@ -44,7 +44,7 @@ export const LayersSection = ({
                     >
                         {title.uno}<br /> {title.dos}
                     </h1>
-                    <p className="text-[20px] text-gray-700 mb-6 mt-5">
+                    <p className="text-[28px] text-gray-700 mb-6 mt-5">
                         {description}
                     </p>
                     <a href="#" className="text-black font-semibold hover:underline text-left" >

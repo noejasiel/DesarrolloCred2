@@ -11,6 +11,7 @@ import ContactForm from '../sections/Contact'
 import Seguridad from '../../components/BannerSecurity'
 import Testimonials from '../../components/Testimonials'
 import CreditCards from '../../components/CreditCards'
+import WhatsAppButton from '../../components/WhatsAppButton'
 
 
 export default function HomePage() {
@@ -25,10 +26,11 @@ export default function HomePage() {
       <Testimonials />
       <FAQSection />
       <ContactForm />
-      <LayerLast />
+{/*       <LayerLast /> */}
       <Footer />
-
       
+      {/* Botón flotante de WhatsApp */}
+      <WhatsAppButton />
     </main>
   )
 }

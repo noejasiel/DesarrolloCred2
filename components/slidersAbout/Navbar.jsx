@@ -39,17 +39,12 @@ const Navbar = () => {
           
           <nav className="hidden md:flex items-center space-x-8 glass-effect px-6 py-3 rounded-full text-black" >
             <Link href="/" className="text-black hover:text-black transition-colors font-medium">
-              Préstamosdwsd
+              Préstamos
             </Link>
-            <Link href="/about" className="text-black hover:text-black transition-colors font-medium">
-              Soluciones
+            <Link href="/" className="text-black hover:text-black transition-colors font-medium">
+              Contactanos 
             </Link>
-            <Link href="/about" className="text-black hover:text-black transition-colors font-medium">
-              Para Empresas
-            </Link>
-            <Link href="/contact" className="text-black hover:text-black transition-colors font-medium">
-              Recursos
-            </Link>
+           
           </nav>
           
           <div className="flex items-center space-x-4">

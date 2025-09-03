@@ -106,7 +106,7 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="bg-gradient-to-br from-[#f8f8f8] to-white py-16 px-4 md:px-12 lg:px-24">
+    <section id="faq-section" className="bg-gradient-to-br from-[#f8f8f8] to-white py-16 px-4 md:px-12 lg:px-24">
       <h2 className="font-semibold text-[#0045ac] mb-12 text-2xl md:text-6xl sm:text-6xl lg:text-6xl xl:text-[64px]">
         Preguntas frecuentes
       </h2>

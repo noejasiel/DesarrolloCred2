@@ -15,7 +15,7 @@ export default function FeaturesBanner() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10">
         <div>
           <div className="text-3xl mb-2">🏦</div>
-          <p className="text-lg">Asesoría crediticia especializada con instituciones bancarias confiables</p>
+          <p className="text-lg">Asesoría crediticia especializada </p>
         </div>
         <div>
           <div className="text-3xl mb-2">📊</div>

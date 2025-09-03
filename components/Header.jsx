@@ -5,7 +5,7 @@ import { gsap } from 'gsap/dist/gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import Image from 'next/image'
 
-const navItems = ['Préstamos', 'Soluciones', 'Para Empresas', 'Recursos']
+const navItems = ['Préstamos', 'Contactanos']
 
 let scrollPosition = 0
 
@@ -19,7 +19,7 @@ export default function Header() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
-    
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: 'body',
@@ -29,11 +29,11 @@ export default function Header() {
         onLeaveBack: () => updateNavbar(false)
       }
     })
-    
+
     function updateNavbar(scrolled) {
       if (scrolled) {
         gsap.to(headerRef.current, {
-          
+
           backdropFilter: 'blur(20px)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
           duration: 0.3
@@ -55,18 +55,18 @@ export default function Header() {
 
   useEffect(() => {
     const [topBar, middleBar, bottomBar] = menuButtonRef.current.children
-  
+
     if (isMenuOpen) {
       scrollPosition = window.scrollY
       document.body.style.position = 'fixed'
       document.body.style.top = `-${scrollPosition}px`
       document.body.style.overflow = 'hidden'
       document.body.style.width = '100%'
-    
+
       gsap.to(topBar, { rotation: 45, y: 10, duration: 0.3 })
       gsap.to(middleBar, { opacity: 0, duration: 0.3 })
       gsap.to(bottomBar, { rotation: -45, y: -8, duration: 0.3 })
-    
+
       setShouldRenderMenu(true)
     } else {
       document.body.style.position = ''
@@ -74,11 +74,11 @@ export default function Header() {
       document.body.style.overflow = 'auto'
       document.body.style.width = ''
       window.scrollTo(0, scrollPosition)
-  
+
       gsap.to(topBar, { rotation: 0, y: 0, duration: 0.3 })
       gsap.to(middleBar, { opacity: 1, duration: 0.3 })
       gsap.to(bottomBar, { rotation: 0, y: 0, duration: 0.3 })
-  
+
       if (mobileMenuRef.current) {
         gsap.to(mobileMenuRef.current, {
           y: -50,
@@ -91,7 +91,7 @@ export default function Header() {
         })
       }
     }
-  
+
     return () => {
       document.body.style.overflow = 'auto'
       document.body.style.position = ''
@@ -132,18 +132,21 @@ export default function Header() {
         }
       `}</style>
 
-      <header 
+      <header
         ref={headerRef}
         className="w-full px-6 py-1  fixed top-0 left-0 right-0 z-50"
-        style={{  backdropFilter: 'blur(20px)', backgroundColor: '#ffffff59' }}
+        style={{ backdropFilter: 'blur(20px)', backgroundColor: '#ffffff59' }}
       >
         <div className="max-w-[90%] mx-auto flex justify-between md:justify-between items-center gap-8 md:gap-16">
           {/* Logo */}
           <div className="flex items-center flex-row flex-shrink-0">
-            <Link href="/" className="text-3xl font-bold text-[#088bf3] tracking-wider glow-text flex items-center gap-2 flex-row">
-            <Image src="/logo.png" alt="Logo" width={80} height={80} />
-            <span className="text-sm md:text-lg font-bold text-[#088bf3] tracking-wider flex items-center gap-2 flex-row whitespace-nowrap"> DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL</span>
-            </Link>
+                          <Link href="/" className="text-3xl font-bold text-[#088bf3] tracking-wider glow-text flex items-center gap-2 flex-row">
+               <Image src="/logo.png" alt="Logo" width={80} height={80} />
+               <div className="flex flex-col">
+                 <span className="text-sm md:text-lg font-bold text-black tracking-wider flex items-center gap-2 flex-row whitespace-nowrap"> DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL</span>
+                 <span className="text-xs text-gray-500 tracking-wider">componentes biffer</span>
+               </div>
+              </Link>
           </div>
 
           {/* Navegación principal para pantallas grandes */}
@@ -151,7 +154,7 @@ export default function Header() {
             {navItems.map(item => (
               <Link
                 key={item}
-                href={item === 'Préstamos' ? '/' : item === 'Soluciones' ? '/about' : item === 'Para Empresas' ? '/about' : '/contact'}
+                href={item === 'Préstamos' ? '#credit-cards' : item === 'Contactanos' ? '#contact-form' : '/'}
                 className="text-black hover:text-gray-500 transition-colors font-medium whitespace-nowrap"
                 onClick={() => setActive(item)}
               >
@@ -160,10 +163,10 @@ export default function Header() {
             ))}
           </nav>
 
-         
+
 
           {/* Menú Hamburguesa para dispositivos móviles */}
-          <button 
+          <button
             className="md:hidden flex flex-col justify-between w-6 h-5 z-50 relative"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             ref={menuButtonRef}
@@ -178,14 +181,14 @@ export default function Header() {
             <div
               ref={mobileMenuRef}
               className="md:hidden fixed top-20 left-0 h-screen w-full shadow-lg p-4 z-50"
-              style={{  backdropFilter: 'blur(20px)', background:"white" }}
+              style={{ backdropFilter: 'blur(20px)', background: "white" }}
             >
-              
+
               <div className="flex flex-col items-center justify-center h-full space-y-6">
                 {navItems.map(item => (
                   <Link
                     key={item}
-                    href={item === 'Préstamos' ? '/' : item === 'Soluciones' ? '/about' : item === 'Para Empresas' ? '/about' : '/contact'}
+                    href={item === 'Préstamos' ? '#credit-cards' : item === 'Contactanos' ? '#contact-form' : '/'}
                     className="block py-3 px-6 text-lg text-black hover:text-[var(--gold-yellow)] transition-colors"
                     onClick={() => {
                       setActive(item)
@@ -196,8 +199,8 @@ export default function Header() {
                   </Link>
                 ))}
                 <div className="mt-8 space-y-4">
-                  <Link 
-                    href="/contact" 
+                  <Link
+                    href="/contact"
                     className="block py-3 px-6 text-lg text-white hover:text-[var(--gold-yellow)] transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >

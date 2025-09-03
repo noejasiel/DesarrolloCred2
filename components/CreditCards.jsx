@@ -6,6 +6,48 @@ import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Estilos para la animación del fondo con colores más tenues
+const animatedBackgroundStyles = `
+  @keyframes gradient-flow {
+    0% {
+      background: linear-gradient(45deg, #f8fafc, #f1f5f9, #f0f4f8, #f8fafc);
+      background-size: 400% 400%;
+      background-position: 0% 50%;
+    }
+    25% {
+      background: linear-gradient(45deg, #f1f5f9, #f0f4f8, #f8fafc, #f1f5f9);
+      background-size: 400% 400%;
+      background-position: 100% 50%;
+    }
+    50% {
+      background: linear-gradient(45deg, #f0f4f8, #f8fafc, #f1f5f9, #f0f4f8);
+      background-size: 400% 400%;
+      background-position: 0% 50%;
+    }
+    75% {
+      background: linear-gradient(45deg, #f8fafc, #f1f5f9, #f0f4f8, #f8fafc);
+      background-size: 400% 400%;
+      background-position: 100% 50%;
+    }
+    100% {
+      background: linear-gradient(45deg, #f8fafc, #f1f5f9, #f0f4f8, #f8fafc);
+      background-size: 400% 400%;
+      background-position: 0% 50%;
+    }
+  }
+  
+  .animate-gradient-shift {
+    animation: gradient-flow 15s ease-in-out infinite;
+  }
+`;
+
+// Inyectar estilos en el head
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = animatedBackgroundStyles;
+  document.head.appendChild(styleSheet);
+}
+
 // Datos de las cards de crédito
 const creditCardsData = [
   {
@@ -108,10 +150,10 @@ const CreditCard = ({ title, description, image, icon, index }) => {
   return (
     <div 
       ref={cardRef}
-      className="bg-white rounded-2xl shadow-md p-6 md:p-8 lg:p-6 transition-all duration-300 cursor-pointer h-full flex flex-col w-full max-w-sm md:max-w-lg lg:max-w-sm"
+      className="bg-white rounded-3xl shadow-lg p-8 md:p-10 lg:p-8 transition-all duration-300 cursor-pointer h-full flex flex-col w-full max-w-lg md:max-w-2xl lg:max-w-lg"
     >
       {/* Imagen */}
-      <div className="relative w-full h-48 md:h-56 lg:h-48 mb-4 rounded-xl overflow-hidden bg-gray-100">
+      <div className="relative w-full h-64 md:h-72 lg:h-64 mb-6 rounded-2xl overflow-hidden bg-gray-100">
         <img 
           src={image} 
           alt={title}
@@ -122,23 +164,23 @@ const CreditCard = ({ title, description, image, icon, index }) => {
           }}
         />
         {/* Fallback cuando la imagen no carga */}
-        <div className="absolute inset-0 flex items-center justify-center text-6xl bg-gradient-to-br from-blue-50 to-indigo-100" style={{display: 'none'}}>
+        <div className="absolute inset-0 flex items-center justify-center text-8xl bg-gradient-to-br from-blue-50 to-indigo-100" style={{display: 'none'}}>
           {icon}
         </div>
       </div>
 
       {/* Título */}
-      <h3 className="text-xl font-semibold text-gray-900 mb-3">
+      <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
         {title}
       </h3>
 
       {/* Descripción */}
-      <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
+      <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6 flex-grow">
         {description}
       </p>
 
       {/* Botón de acción - siempre al fondo */}
-      <button className="w-full bg-[#0045ac] text-white py-3 px-4 rounded-full text-sm font-semibold hover:bg-[#003a8c] transition-colors duration-200 shadow-lg hover:shadow-xl mt-auto">
+      <button className="w-full bg-[#0045ac] text-white py-4 px-6 rounded-full text-base md:text-lg font-semibold hover:bg-[#003a8c] transition-colors duration-200 shadow-lg hover:shadow-xl mt-auto">
         Más información
       </button>
     </div>
@@ -215,8 +257,10 @@ const CreditCards = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full bg-[#f8f8f8] py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="credit-cards" ref={sectionRef} className="w-full py-20 relative overflow-hidden">
+      {/* Fondo animado morado-azul */}
+      <div className="absolute inset-0 animate-gradient-shift"></div>
+      <div className="max-w-[100%] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Título de la sección */}
         <div className="text-center mb-16">
           <h2 ref={titleRef} className="text-3xl md:text-5xl font-semibold text-gray-900 mb-4">
@@ -229,7 +273,7 @@ const CreditCards = () => {
         </div>
 
         {/* Grid de cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 justify-items-center">
           {creditCardsData.map((card, index) => (
             <CreditCard
               key={card.id}
