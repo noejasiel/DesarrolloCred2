@@ -5,8 +5,80 @@ import Header from '../components/Header'
 import Features from './sections/Features'
 
 export const metadata = {
-  title: 'Landing Empresarial',
-  description: 'Una landing minimalista y moderna',
+  title: 'DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL | Componentes Biffer',
+  description: 'Especialistas en asesoría crediticia personal y empresarial. Te ayudamos a obtener créditos personales, empresariales, hipotecarios y agrícolas con las mejores condiciones del mercado. Contacto: +52 (55) 93-14-65-04',
+  keywords: 'créditos personales, créditos empresariales, créditos hipotecarios, créditos agrícolas, asesoría crediticia, financiamiento, préstamos, Componentes Biffer, desarrollo crediticio',
+  authors: [{ name: 'Componentes Biffer' }],
+  creator: 'Componentes Biffer',
+  publisher: 'Componentes Biffer',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('https://desarrollocrediticiopersonalyempresarial.com'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL',
+    description: 'Especialistas en asesoría crediticia personal y empresarial. Te ayudamos a obtener créditos con las mejores condiciones del mercado.',
+    url: 'https://desarrollocrediticiopersonalyempresarial.com',
+    siteName: 'Desarrollo Crediticio Personal y Empresarial',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Desarrollo Crediticio Personal y Empresarial - Componentes Biffer',
+      },
+    ],
+    locale: 'es_MX',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL',
+    description: 'Especialistas en asesoría crediticia personal y empresarial. Te ayudamos a obtener créditos con las mejores condiciones del mercado.',
+    images: ['/logo.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
+  },
+  category: 'finance',
+  classification: 'Business',
+  referrer: 'origin-when-cross-origin',
+  colorScheme: 'light',
+  themeColor: '#0045ac',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/logo.png', type: 'image/png' }
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/logo.png',
+    other: {
+      rel: 'apple-touch-icon-precomposed',
+      url: '/logo.png',
+    },
+  },
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({ children }) {

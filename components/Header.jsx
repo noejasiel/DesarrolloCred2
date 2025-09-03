@@ -144,8 +144,9 @@ export default function Header() {
             <Link href="/" className="text-3xl font-bold text-[#088bf3] tracking-wider glow-text flex items-center gap-2 flex-row min-w-0">
               <Image src="/logo.png" alt="Logo" width={60} height={60} className="md:w-20 md:h-20 flex-shrink-0" />
               <div className="flex flex-col min-w-0">
-                <span className="text-xs md:text-lg font-bold text-black tracking-wider whitespace-nowrap overflow-hidden">DESARROLLO CREDITICIO</span>
-                <span className="text-xs text-gray-500 tracking-wider">PERSONAL Y EMPRESARIAL</span>
+                <span className="text-xs md:text-lg font-bold text-black tracking-wider whitespace-nowrap overflow-hidden md:hidden">DESARROLLO CREDITICIO</span>
+                <span className="text-xs text-gray-500 tracking-wider md:hidden">PERSONAL Y EMPRESARIAL</span>
+                <span className="text-xs md:text-lg font-bold text-black tracking-wider whitespace-nowrap overflow-hidden hidden md:block">DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL</span>
                 <span className="text-xs text-gray-500 tracking-wider block">componentes biffer</span>
               </div>
             </Link>
