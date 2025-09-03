@@ -68,10 +68,11 @@ export const metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/logo.png', type: 'image/png' }
+      { url: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+      { url: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+      { url: '/logo.png', type: 'image/png', sizes: '192x192' }
     ],
-    shortcut: '/favicon.ico',
+    shortcut: '/favicon-32x32.png',
     apple: '/logo.png',
     other: {
       rel: 'apple-touch-icon-precomposed',
