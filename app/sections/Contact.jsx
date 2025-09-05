@@ -72,21 +72,37 @@ export default function ContactForm() {
 
     setIsSubmitting(true)
 
-    // Simulate API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      // Reset form
-      setFormData({
-        fullName: "",
-        amount: "",
-        city: "",
-        phone: "",
-        email: "",
-        message: "",
+      // Enviar datos a la API real
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
       })
+
+      const result = await response.json()
+
+      if (result.success) {
+        // Mostrar mensaje de éxito
+        alert('¡Gracias por tu solicitud! Nos pondremos en contacto contigo pronto.')
+        
+        // Reset form
+        setFormData({
+          fullName: "",
+          amount: "",
+          city: "",
+          phone: "",
+          email: "",
+          message: "",
+        })
+      } else {
+        throw new Error(result.message || 'Error al enviar el formulario')
+      }
     } catch (error) {
       console.error("Error al enviar el formulario:", error)
+      alert('Hubo un error al enviar tu solicitud. Por favor, inténtalo de nuevo.')
     } finally {
       setIsSubmitting(false)
     }
