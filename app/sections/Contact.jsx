@@ -1,6 +1,6 @@
 'use client';
 import { useState } from "react";
-import { Star, Loader2, CheckCircle, CreditCard, Shield, Users } from "lucide-react";
+import { Star, Loader2, CheckCircle, CreditCard, Shield, Users, X, AlertCircle } from "lucide-react";
 import Image from "next/image";
 
 export default function ContactForm() {
@@ -15,6 +15,30 @@ export default function ContactForm() {
 
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [notification, setNotification] = useState(null)
+
+  // Función para mostrar notificaciones divertidas
+  const showNotification = (type, title, message) => {
+    setNotification({ type, title, message })
+    setTimeout(() => setNotification(null), 5000) // Se oculta después de 5 segundos
+  }
+
+  // Función para formatear cantidad con separadores de miles
+  const formatAmount = (value) => {
+    // Remover todo lo que no sea número
+    const numericValue = value.replace(/[^\d]/g, '')
+    
+    if (!numericValue) return ''
+    
+    // Formatear con separadores de miles
+    const formatted = new Intl.NumberFormat('es-MX').format(parseInt(numericValue))
+    return `$${formatted}`
+  }
+
+  // Función para obtener el valor numérico limpio
+  const getCleanAmount = (formattedValue) => {
+    return formattedValue.replace(/[^\d]/g, '')
+  }
 
   const validateForm = () => {
     const newErrors = {}
@@ -23,10 +47,13 @@ export default function ContactForm() {
       newErrors.fullName = "El nombre completo es obligatorio"
     }
 
-    if (!formData.amount.trim()) {
+    const cleanAmount = getCleanAmount(formData.amount)
+    if (!cleanAmount) {
       newErrors.amount = "La cantidad es obligatoria"
-    } else if (isNaN(Number(formData.amount)) || Number(formData.amount) <= 0) {
+    } else if (isNaN(Number(cleanAmount)) || Number(cleanAmount) <= 0) {
       newErrors.amount = "Ingresa una cantidad válida"
+    } else if (Number(cleanAmount) < 1000) {
+      newErrors.amount = "La cantidad mínima es de $1,000"
     }
 
     if (!formData.city.trim()) {
@@ -56,7 +83,14 @@ export default function ContactForm() {
   }
 
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    let processedValue = value
+    
+    // Formatear automáticamente el campo amount
+    if (field === 'amount') {
+      processedValue = formatAmount(value)
+    }
+    
+    setFormData((prev) => ({ ...prev, [field]: processedValue }))
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }))
@@ -72,23 +106,28 @@ export default function ContactForm() {
 
     setIsSubmitting(true)
 
-    console.log('Datos a enviar:', formData)
-
     try {
+      // Preparar datos para envío con cantidad limpia
+      const dataToSend = {
+        ...formData,
+        amount: getCleanAmount(formData.amount) // Enviar solo números
+      }
+      
       // Enviar datos a la API real
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(dataToSend)
       })
 
       const result = await response.json()
 
       if (result.success) {
-        // Mostrar mensaje de éxito
-        alert('¡Gracias por tu solicitud! Nos pondremos en contacto contigo pronto.')
+        // Mostrar mensaje de éxito divertido
+        showNotification('success', '🎉 ¡Solicitud enviada!', 
+          '¡Genial! Tu solicitud de crédito ha volado hacia nosotros. Nuestro equipo de expertos financieros se pondrá en contacto contigo pronto.')
         
         // Reset form
         setFormData({
@@ -104,9 +143,10 @@ export default function ContactForm() {
       }
     } catch (error) {
       console.error("Error al enviar el formulario:", error)
-      alert('Hubo un error al enviar tu solicitud. Por favor, inténtalo de nuevo.')
+      // Mostrar mensaje de error divertido
+      showNotification('error', '🤔 ¡Ups! Algo salió mal', 
+        '¡Vaya! Parece que nuestros servidores están tomando un cafecito ☕. No te preocupes, esto pasa hasta en las mejores familias. ¡Inténtalo de nuevo en un momento y tu solicitud llegará perfecta! 🚀')
     } finally {
-      console.log('Finalizando envío...')
       setIsSubmitting(false)
     }
   }
@@ -215,6 +255,7 @@ export default function ContactForm() {
                     <input
                       id="fullName"
                       type="text"
+                      autoComplete="name"
                       value={formData.fullName}
                       onChange={(e) => handleInputChange("fullName", e.target.value)}
                       placeholder="Tu nombre completo"
@@ -232,7 +273,7 @@ export default function ContactForm() {
                       type="text"
                       value={formData.amount}
                       onChange={(e) => handleInputChange("amount", e.target.value)}
-                      placeholder="$0.00"
+                      placeholder="Ej: $50,000"
                       className={`w-full px-4 py-3 text-lg border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0045ac]/20 focus:border-[#0045ac] ${errors.amount ? "border-red-500" : "border-gray-300"}`}
                     />
                     {errors.amount && <p className="text-base text-red-600">{errors.amount}</p>}
@@ -261,7 +302,7 @@ export default function ContactForm() {
                     </label>
                     <input
                       id="phone"
-                      type="tel"
+                      type="number"
                       value={formData.phone}
                       onChange={(e) => handleInputChange("phone", e.target.value)}
                       placeholder="10 dígitos"
@@ -325,6 +366,41 @@ export default function ContactForm() {
           </div>
         </div>
       </div>
+
+      {/* Notificaciones Divertidas */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 max-w-md">
+          <div className={`rounded-2xl p-6 shadow-2xl border-2 transform transition-all duration-300 ${
+            notification.type === 'success' 
+              ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800' 
+              : 'bg-gradient-to-r from-red-50 to-rose-50 border-red-200 text-red-800'
+          }`}>
+            <div className="flex items-start space-x-3">
+              <div className="flex-shrink-0">
+                {notification.type === 'success' ? (
+                  <CheckCircle className="h-6 w-6 text-green-600" />
+                ) : (
+                  <AlertCircle className="h-6 w-6 text-red-600" />
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-bold mb-2">
+                  {notification.title}
+                </h3>
+                <p className="text-sm leading-relaxed">
+                  {notification.message}
+                </p>
+              </div>
+              <button
+                onClick={() => setNotification(null)}
+                className="flex-shrink-0 ml-2 p-1 rounded-full hover:bg-white hover:bg-opacity-20 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

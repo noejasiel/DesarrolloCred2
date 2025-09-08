@@ -147,7 +147,7 @@ export default function Header() {
                 <span className="text-xs md:text-lg font-bold text-black tracking-wider whitespace-nowrap overflow-hidden md:hidden">DESARROLLO CREDITICIO</span>
                 <span className="text-xs text-gray-500 tracking-wider md:hidden">PERSONAL Y EMPRESARIAL</span>
                 <span className="text-xs md:text-lg font-bold text-black tracking-wider whitespace-nowrap overflow-hidden hidden md:block">DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL</span>
-                <span className="text-xs text-gray-500 tracking-wider block">componentes biffer</span>
+                <span className="text-xs text-gray-500 tracking-wider block">componentes vifer</span>
               </div>
             </Link>
           </div>
@@ -157,9 +157,15 @@ export default function Header() {
             {navItems.map(item => (
               <Link
                 key={item}
-                href={item === 'Préstamos' ? '#credit-cards' : item === 'Contactanos' ? '#contact-form' : '/'}
+                href={item === 'Préstamos' ? '#' : item === 'Contactanos' ? '#contact-form' : '/'}
                 className="text-black hover:text-gray-500 transition-colors font-medium whitespace-nowrap"
-                onClick={() => setActive(item)}
+                onClick={(e) => {
+                  setActive(item)
+                  if (item === 'Préstamos') {
+                    e.preventDefault()
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }
+                }}
               >
                 {item}
               </Link>
@@ -216,15 +222,19 @@ export default function Header() {
                       <Link
                         key={item}
                         href={
-                          item === 'Préstamos' ? '#credit-cards' : 
+                          item === 'Préstamos' ? '#' : 
                           item === 'Créditos' ? '#credit-cards' :
                           item === 'FAQ' ? '#faq-section' :
                           item === 'Contactanos' ? '#contact-form' : '/'
                         }
                         className="block py-3 px-4 text-lg font-medium text-gray-700 hover:text-[#0045ac] hover:bg-blue-50 rounded-lg transition-all duration-200"
-                        onClick={() => {
+                        onClick={(e) => {
                           setActive(item)
                           setIsMenuOpen(false)
+                          if (item === 'Préstamos') {
+                            e.preventDefault()
+                            window.scrollTo({ top: 0, behavior: 'smooth' })
+                          }
                         }}
                       >
                         {item}
