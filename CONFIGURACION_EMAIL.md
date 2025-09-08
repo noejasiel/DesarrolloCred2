@@ -57,12 +57,55 @@ El template del correo está en `app/api/contact/route.js` líneas 19-112. Puede
 - Texto del mensaje
 - Estructura del contenido
 
+## 🚨 Evitar que los Correos Vayan a Spam
+
+### ✅ Mejoras Automáticas Ya Aplicadas:
+- ✅ Asunto más específico y profesional
+- ✅ Nombre del remitente personalizado
+- ✅ Campo `replyTo` configurado
+- ✅ Contenido HTML bien estructurado
+
+### 📧 Configuraciones Adicionales Recomendadas:
+
+#### 1. Marcar como "No es Spam" (Inmediato)
+- Busca el correo en tu carpeta de spam
+- Márcalo como "No es spam" o "No es correo no deseado"
+- Agrega `onboarding@resend.dev` a tus contactos
+
+#### 2. Crear Filtro en Gmail (Recomendado)
+1. Ve a Gmail → Configuración → Filtros y direcciones bloqueadas
+2. Crear filtro nuevo:
+   - **De**: `onboarding@resend.dev`
+   - **Asunto**: `Nueva Solicitud de Crédito`
+3. Acción: "Nunca enviar a spam" + "Aplicar etiqueta: Leads"
+
+#### 3. Usar tu Propio Dominio (Mejor Solución)
+Si tienes dominio propio (ej: `tuempresa.com`):
+1. En Resend → Settings → Domains
+2. Agregar tu dominio
+3. Configurar registros DNS
+4. Cambiar `from:` a `contacto@tudominio.com`
+
+### 🔧 Configuración Avanzada Anti-Spam
+
+#### Opción A: Dominio Propio (Más Profesional)
+```javascript
+from: 'Asesoría Crediticia <contacto@tudominio.com>'
+```
+
+#### Opción B: Mejorar Email Actual
+```javascript
+from: 'Sistema de Leads <onboarding@resend.dev>'
+```
+
 ## 🚨 Solución de Problemas
 
 Si no recibes correos:
-1. Verifica que la API key esté correcta en Vercel
-2. Revisa los logs en Vercel → Functions → Ver logs
-3. Asegúrate de que tu email no esté en spam
+1. **Revisa spam primero** - 90% van ahí inicialmente
+2. Verifica que la API key esté correcta en Vercel
+3. Revisa los logs en Vercel → Functions → Ver logs
+4. Marca como "No es spam" y crea filtro
+5. Considera usar tu propio dominio
 
 ## 📱 Próximos Pasos
 

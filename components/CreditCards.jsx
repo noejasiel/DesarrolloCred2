@@ -229,13 +229,43 @@ const CreditCard = ({ title, description, image, icon, index, details, onMoreInf
         };
     }, [index]);
 
+    // Determinar si la imagen va a la izquierda (índices pares) o derecha (índices impares)
+    const isImageLeft = index % 2 === 0;
+
     return (
         <div
             ref={cardRef}
-            className="bg-white rounded-3xl shadow-lg p-8 md:p-10 lg:p-8 transition-all duration-300 cursor-pointer h-full flex flex-col w-full max-w-lg md:max-w-2xl lg:max-w-lg"
+            className={`bg-white rounded-3xl shadow-lg p-6 md:p-8 transition-all duration-300 cursor-pointer h-full flex flex-col ${isImageLeft ? 'md:flex-row-reverse' : 'md:flex-row'} w-full max-w-6xl`}
         >
+            {/* Contenido de información */}
+            <div className={`flex-1 flex flex-col justify-between ${isImageLeft ? 'pl-0 md:pl-8' : 'pr-0 md:pr-8'} mb-6 md:mb-0`}>
+                {/* Título */}
+                <div>
+                    <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                        {title}
+                    </h3>
+
+                    {/* Descripción */}
+                    <p className="text-gray-600 text-base md:text-lg lg:text-xl leading-relaxed mb-6 flex-grow">
+                        {description}
+                    </p>
+                </div>
+
+                {/* Botón de acción - siempre al fondo */}
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onMoreInfo && onMoreInfo({ title, description, image, details });
+                    }}
+                    className="w-full md:w-auto bg-[#0045ac] text-white py-4 px-8 rounded-full text-base md:text-lg font-semibold hover:bg-[#003a8c] transition-colors duration-200 shadow-lg hover:shadow-xl"
+                >
+                    Más información
+                </button>
+            </div>
+
             {/* Imagen */}
-            <div className="relative w-full h-64 md:h-72 lg:h-64 mb-6 rounded-2xl overflow-hidden bg-gray-100">
+            <div className="relative w-full md:w-80 lg:w-96 h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
                 <img
                     src={image}
                     alt={title}
@@ -246,32 +276,10 @@ const CreditCard = ({ title, description, image, icon, index, details, onMoreInf
                     }}
                 />
                 {/* Fallback cuando la imagen no carga */}
-                <div className="absolute inset-0 flex items-center justify-center text-8xl bg-gradient-to-br from-blue-50 to-indigo-100" style={{ display: 'none' }}>
+                <div className="absolute inset-0 flex items-center justify-center text-6xl md:text-8xl bg-gradient-to-br from-blue-50 to-indigo-100" style={{ display: 'none' }}>
                     {icon}
                 </div>
             </div>
-
-            {/* Título */}
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                {title}
-            </h3>
-
-            {/* Descripción */}
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6 flex-grow">
-                {description}
-            </p>
-
-            {/* Botón de acción - siempre al fondo */}
-            <button
-                onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onMoreInfo && onMoreInfo({ title, description, image, details });
-                }}
-                className="w-full bg-[#0045ac] text-white py-4 px-6 rounded-full text-base md:text-lg font-semibold hover:bg-[#003a8c] transition-colors duration-200 shadow-lg hover:shadow-xl mt-auto"
-            >
-                Más información
-            </button>
         </div>
     );
 };
@@ -426,7 +434,7 @@ const CreditCards = () => {
                 </div>
 
                 {/* Grid de cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 justify-items-center">
+                <div className="flex flex-col gap-8 lg:gap-12 items-center">
                     {creditCardsData.map((card, index) => (
                         <CreditCard
                             key={card.id}
@@ -445,6 +453,12 @@ const CreditCards = () => {
                 <div className="text-center mt-16">
                     <button
                         ref={ctaRef}
+                        onClick={() => {
+                            const contactForm = document.getElementById('contact-form') || document.querySelector('[id*="contact"]');
+                            if (contactForm) {
+                                contactForm.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        }}
                         className="bg-[#0045ac] text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-[#003a8c] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                     >
                         Solicita tu crédito ahora
@@ -454,16 +468,16 @@ const CreditCards = () => {
 
             {/* Modal Completamente Nuevo */}
             {isModalOpen && selectedCard && (
-                <div 
+                <div
                     className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
                     style={{ touchAction: 'none' }}
                 >
                     {/* Overlay */}
-                    <div 
+                    <div
                         className="absolute inset-0 bg-black bg-opacity-50"
                         onClick={closeModal}
                     ></div>
-                    
+
                     {/* Modal Container */}
                     <div className="relative bg-white rounded-2xl w-full max-w-4xl mx-4 max-h-[90vh] flex flex-col shadow-2xl">
                         {/* Header Fijo */}
@@ -490,7 +504,7 @@ const CreditCards = () => {
                         </div>
 
                         {/* Contenido Scrolleable */}
-                        <div 
+                        <div
                             className="flex-1 overflow-y-auto p-6"
                             onWheel={(e) => e.stopPropagation()}
                             onTouchMove={(e) => e.stopPropagation()}

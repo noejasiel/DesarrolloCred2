@@ -13,9 +13,10 @@ export async function POST(req) {
 
     // Email para ti (notificación)
     const emailData = {
-      from: 'contacto@resend.dev', // Email por defecto de Resend (gratuito)
-      to: ['noesilvido@gmail.com'], // Tu email
-      subject: `📬 Nuevo contacto desde ${brand.name || 'tu landing page'}`,
+      from: 'Asesoría Crediticia <onboarding@resend.dev>', // Nombre + email por defecto
+      to: ['informacion@desarrollocrediticiopersonalyempresarial.com '], // Tu email
+      subject: `Nueva Solicitud de Crédito - ${fullName}`, // Más específico y profesional
+      replyTo: email, // Permite responder directamente al cliente
       html: `
              <!DOCTYPE html>
 <html lang="es">
@@ -38,7 +39,7 @@ export async function POST(req) {
         <!-- Main Content -->
         <div style="padding: 40px 40px 20px 40px;">
             <h2 style="margin: 0 0 30px 0; font-size: 28px; font-weight: 600; color: #0045ac; line-height: 1.3;">
-                💰 Nueva Solicitud de Asesoría Crediticia
+                 Nueva Solicitud de Asesoría Crediticia
             </h2>
             
             <p style="margin: 0 0 30px 0; font-size: 16px; color: #666666; line-height: 1.5;">
@@ -102,7 +103,7 @@ export async function POST(req) {
         <div style="background-color: #0045ac; color: #ffffff; padding: 20px 40px;">
             <div style="text-align: center;">
                 <p style="margin: 0; font-size: 14px; color: #ffffff;">
-                    © 2024 ${brand.name || 'Asesoría Crediticia'} - Sistema de notificaciones automáticas
+                    © 2025 ${brand.name || 'Asesoría Crediticia'} - Sistema de notificaciones automáticas
                 </p>
             </div>
         </div>
