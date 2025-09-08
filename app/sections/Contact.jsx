@@ -72,6 +72,8 @@ export default function ContactForm() {
 
     setIsSubmitting(true)
 
+    console.log('Datos a enviar:', formData)
+
     try {
       // Enviar datos a la API real
       const response = await fetch('/api/contact', {
@@ -104,6 +106,7 @@ export default function ContactForm() {
       console.error("Error al enviar el formulario:", error)
       alert('Hubo un error al enviar tu solicitud. Por favor, inténtalo de nuevo.')
     } finally {
+      console.log('Finalizando envío...')
       setIsSubmitting(false)
     }
   }

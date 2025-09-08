@@ -68,16 +68,26 @@ export const metadata = {
   },
   icons: {
     icon: [
+      '/favicon.ico',
       { url: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
       { url: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
       { url: '/logo.png', type: 'image/png', sizes: '192x192' }
     ],
-    shortcut: '/favicon-32x32.png',
-    apple: '/logo.png',
-    other: {
-      rel: 'apple-touch-icon-precomposed',
-      url: '/logo.png',
-    },
+    shortcut: '/favicon.ico',
+    apple: [
+      { url: '/logo.png', sizes: '180x180' }
+    ],
+    other: [
+      {
+        rel: 'apple-touch-icon-precomposed',
+        url: '/logo.png',
+      },
+      {
+        rel: 'mask-icon',
+        url: '/logo.png',
+        color: '#0045ac'
+      }
+    ],
   },
   manifest: '/manifest.json',
 }
