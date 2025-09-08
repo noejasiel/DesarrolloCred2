@@ -4,17 +4,29 @@ import { brand } from '../../config/brand'
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req) {
-  console.log('RESEND API KEY:', process.env.RESEND_API_KEY ? '✅ configurada' : '❌ falta configurar');
+
+  // Verificar que la API key esté configurada
+  if (!process.env.RESEND_API_KEY) {
+    return new Response(JSON.stringify({ 
+      success: false, 
+      error: 'RESEND_API_KEY no configurada',
+      message: 'La API key de Resend no está configurada en las variables de entorno.' 
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
   try {
     const body = await req.json();
     const { fullName, email, phone, message, amount, city } = body;
-    console.log('Datos recibidos:', body);
 
-    // Email para ti (notificación)
+    // Email para ti (notificación) - usando dominio verificado
+    const destinationEmail = 'informacion@desarrollocrediticiopersonalyempresarial.com'.trim();
+    
     const emailData = {
-      from: 'Asesoría Crediticia <onboarding@resend.dev>', // Nombre + email por defecto
-      to: ['informacion@desarrollocrediticiopersonalyempresarial.com '], // Tu email
+      from: 'Sistema de Contacto <noreply@desarrollocrediticiopersonalyempresarial.com>', // Usando tu dominio verificado
+      to: [destinationEmail], // Tu email
       subject: `Nueva Solicitud de Crédito - ${fullName}`, // Más específico y profesional
       replyTo: email, // Permite responder directamente al cliente
       html: `
@@ -116,8 +128,6 @@ export async function POST(req) {
     // Enviar el correo usando Resend
     const response = await resend.emails.send(emailData);
 
-    console.log('Respuesta Resend:', response);
-
     return new Response(JSON.stringify({ 
       success: true, 
       message: 'Correo enviado exitosamente',
@@ -128,12 +138,12 @@ export async function POST(req) {
     });
 
   } catch (error) {
-    console.error('Error al enviar el correo:', error);
   
     return new Response(JSON.stringify({ 
       success: false, 
       error: error.message,
-      message: 'Error al enviar el correo. Verifica tu API key de Resend.' 
+      errorCode: error.code,
+      message: 'Error al enviar el correo. Revisa los logs para más detalles.' 
     }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
