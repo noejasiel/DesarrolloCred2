@@ -65,7 +65,7 @@ export const LayersSection = ({
                         ref={(el) => (imageRefs.current[position] = el)}
                         className="object-cover md:object-contain md:h-full"
                         src={image}
-                        alt="Tablet Fondea Empresarial"
+                        alt="Tablet "
                         width={"1000"}
                         height={"1000"}
                         priority

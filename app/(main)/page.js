@@ -12,11 +12,12 @@ import Seguridad from '../../components/BannerSecurity'
 import Testimonials from '../../components/Testimonials'
 import CreditCards from '../../components/CreditCards'
 import WhatsAppButton from '../../components/WhatsAppButton'
+import MapLocation from '../../components/MapLocation'
 
 
 export default function HomePage() {
   return (
-    <main className='h-screen'>
+    <main className='min-h-screen'>
       <Hero />
       <ProductPitch />
       <Layers />
@@ -26,6 +27,7 @@ export default function HomePage() {
       <Testimonials />
       <FAQSection />
       <ContactForm />
+      <MapLocation />
 {/*       <LayerLast /> */}
       <Footer />
       

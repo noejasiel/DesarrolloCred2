@@ -169,9 +169,11 @@ const creditCardsData = [
     }
 ];
 
-// Componente individual de Card
-const CreditCard = ({ title, description, image, icon, index, details, onMoreInfo }) => {
+// Componente individual de Card expandida
+const CreditCard = ({ id, title, description, image, icon, index, details, isExpanded, onToggle }) => {
     const cardRef = useRef(null);
+    const detailsRef = useRef(null);
+    const arrowRef = useRef(null);
 
     useEffect(() => {
         const card = cardRef.current;
@@ -200,7 +202,7 @@ const CreditCard = ({ title, description, image, icon, index, details, onMoreInf
         const handleMouseEnter = () => {
             gsap.to(card, {
                 y: -3,
-                scale: 1.01,
+                scale: 1.005,
                 duration: 0.2,
                 ease: "power1.out"
             });
@@ -229,57 +231,399 @@ const CreditCard = ({ title, description, image, icon, index, details, onMoreInf
         };
     }, [index]);
 
+    // Animación para el despliegue/colapso de detalles
+    useEffect(() => {
+        const details = detailsRef.current;
+        if (!details) return;
+
+        if (isExpanded) {
+            // Prevenir scroll automático del navegador durante la animación
+            const card = cardRef.current;
+            const initialScrollTop = window.pageYOffset;
+            
+            // Animación de despliegue - efecto "desenrollado"
+            gsap.fromTo(details, 
+                { 
+                    height: 0,
+                    opacity: 0,
+                    scaleY: 0,
+                    transformOrigin: "top center"
+                },
+                { 
+                    height: "auto",
+                    opacity: 1,
+                    scaleY: 1,
+                    duration: 0.6,
+                    ease: "power2.out",
+                    onUpdate: () => {
+                        // Mantener la posición de scroll durante la animación inicial
+                        if (Math.abs(window.pageYOffset - initialScrollTop) < 50) {
+                            window.scrollTo(0, initialScrollTop);
+                        }
+                    }
+                }
+            );
+
+            // Animación de los elementos internos con stagger
+            gsap.fromTo(details.querySelectorAll('.detail-section'), 
+                {
+                    y: 20,
+                    opacity: 0
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.4,
+                    stagger: 0.1,
+                    delay: 0.2,
+                    ease: "power1.out"
+                }
+            );
+        } else {
+            // Primero animar los elementos internos hacia abajo con stagger inverso
+            const sections = details.querySelectorAll('.detail-section');
+            gsap.to(sections, {
+                y: 20,
+                opacity: 0,
+                duration: 0.3,
+                stagger: -0.08, // Stagger negativo para efecto inverso
+                ease: "power1.in"
+            });
+
+            // Luego animar el contenedor - efecto "enrollado" mejorado
+            gsap.to(details, {
+                height: 0,
+                opacity: 0,
+                scaleY: 0,
+                duration: 0.5,
+                delay: 0.2,
+                ease: "power2.inOut",
+                transformOrigin: "top center"
+            });
+        }
+    }, [isExpanded]);
+
+    // Animación continua para la flecha cuando no está expandida
+    useEffect(() => {
+        const arrow = arrowRef.current;
+        if (!arrow) return;
+
+        if (!isExpanded) {
+            // Animación de "rebote" sutil para llamar la atención
+            const bounceAnimation = gsap.to(arrow, {
+                y: 3,
+                duration: 1,
+                ease: "power2.inOut",
+                repeat: -1,
+                yoyo: true,
+                delay: 2 // Empieza después de 2 segundos
+            });
+
+            return () => {
+                bounceAnimation.kill();
+            };
+        }
+    }, [isExpanded]);
+
     // Determinar si la imagen va a la izquierda (índices pares) o derecha (índices impares)
     const isImageLeft = index % 2 === 0;
 
     return (
         <div
             ref={cardRef}
-            className={`bg-white rounded-3xl shadow-lg p-6 md:p-8 transition-all duration-300 cursor-pointer h-full flex flex-col ${isImageLeft ? 'md:flex-row-reverse' : 'md:flex-row'} w-full max-w-6xl`}
+            data-card-id={id}
+            className="bg-white rounded-3xl shadow-lg p-6 md:p-8 lg:p-10 transition-all duration-300 w-full max-w-7xl mx-auto overflow-hidden"
         >
-            {/* Contenido de información */}
-            <div className={`flex-1 flex flex-col justify-between ${isImageLeft ? 'pl-0 md:pl-8' : 'pr-0 md:pr-8'} mb-6 md:mb-0`}>
-                {/* Título */}
-                <div>
-                    <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            {/* Header con imagen, título y descripción */}
+            <div className={`flex flex-col ${isImageLeft ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-8 mb-6`}>
+                {/* Imagen */}
+                <div className="relative w-full lg:w-80 xl:w-96 h-64 lg:h-80 xl:h-96 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
+                    <img
+                        src={image}
+                        alt={title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.nextSibling.style.display = 'flex';
+                        }}
+                    />
+                    {/* Fallback cuando la imagen no carga */}
+                    <div className="absolute inset-0 flex items-center justify-center text-6xl md:text-8xl bg-gradient-to-br from-blue-50 to-indigo-100" style={{ display: 'none' }}>
+                        {icon}
+                    </div>
+                </div>
+
+                {/* Contenido principal */}
+                <div className="flex-1 flex flex-col">
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
                         {title}
                     </h3>
-
-                    {/* Descripción */}
-                    <p className="text-gray-600 text-base md:text-lg lg:text-xl leading-relaxed mb-6 flex-grow">
+                    <p className="text-gray-700 text-lg md:text-xl lg:text-2xl leading-relaxed mb-6">
                         {description}
                     </p>
+                    
+                    {/* Botón "Saber más" simplificado con flecha animada */}
+                    {details && (
+                        <button
+                            onClick={onToggle}
+                            className="flex items-center gap-2 text-[#0045ac] text-lg font-semibold hover:text-[#003a8c] transition-all duration-300 group mb-4 cursor-pointer"
+                        >
+                            <span className="group-hover:translate-x-1 transition-transform duration-300">
+                                {isExpanded ? 'Ocultar información' : 'Saber más'}
+                            </span>
+                            <svg 
+                                ref={arrowRef}
+                                className={`w-5 h-5 transition-all duration-500 ease-out ${
+                                    isExpanded ? 'rotate-180 scale-110' : 'rotate-0 scale-100'
+                                } group-hover:scale-125 group-hover:translate-x-1`}
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                            >
+                                <path 
+                                    strokeLinecap="round" 
+                                    strokeLinejoin="round" 
+                                    strokeWidth={2.5} 
+                                    d="M19 9l-7 7-7-7"
+                                    className="group-hover:stroke-[3]"
+                                />
+                            </svg>
+                        </button>
+                    )}
                 </div>
+            </div>
 
-                {/* Botón de acción - siempre al fondo */}
-                <button
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        onMoreInfo && onMoreInfo({ title, description, image, details });
-                    }}
-                    className="w-full md:w-auto bg-[#0045ac] text-white py-4 px-8 rounded-full text-base md:text-lg font-semibold hover:bg-[#003a8c] transition-colors duration-200 shadow-lg hover:shadow-xl"
+            {/* Información detallada con animación */}
+            {details && (
+                <div 
+                    ref={detailsRef}
+                    className="space-y-6 mb-8 overflow-hidden"
+                    style={{ height: isExpanded ? 'auto' : '0' }}
                 >
-                    Más información
-                </button>
-            </div>
+                    {/* Introducción PYME - Mostrar primero y en ancho completo */}
+                    {details.introduccion && (
+                        <div className="detail-section bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">🏭</span>
+                                ¿Cómo obtener un crédito para PYMES?
+                            </h4>
+                            <p className="text-gray-700 leading-relaxed text-sm lg:text-base">{details.introduccion}</p>
+                        </div>
+                    )}
 
-            {/* Imagen */}
-            <div className="relative w-full md:w-80 lg:w-96 h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
-                <img
-                    src={image}
-                    alt={title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                    }}
-                />
-                {/* Fallback cuando la imagen no carga */}
-                <div className="absolute inset-0 flex items-center justify-center text-6xl md:text-8xl bg-gradient-to-br from-blue-50 to-indigo-100" style={{ display: 'none' }}>
-                    {icon}
+                    {/* Grid para el resto de secciones */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {/* Características */}
+                    {details.caracteristicas && (
+                        <div className="detail-section bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">✨</span>
+                                Características
+                            </h4>
+                            <ul className="space-y-3">
+                                {details.caracteristicas.map((item, idx) => (
+                                    <li key={idx} className="flex items-start space-x-3">
+                                        <span className="text-[#0045ac] mt-1 font-bold">•</span>
+                                        <span className="text-gray-700 text-sm lg:text-base">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Beneficios */}
+                    {details.beneficios && (
+                        <div className="detail-section bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">🎯</span>
+                                Beneficios
+                            </h4>
+                            <ul className="space-y-3">
+                                {details.beneficios.map((item, idx) => (
+                                    <li key={idx} className="flex items-start space-x-3">
+                                        <span className="text-green-500 mt-1 font-bold">✓</span>
+                                        <span className="text-gray-700 text-sm lg:text-base">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Documentos */}
+                    {details.documentos && (
+                        <div className="detail-section bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">📄</span>
+                                Documentos Requeridos
+                            </h4>
+                            <ul className="space-y-3">
+                                {details.documentos.map((item, idx) => (
+                                    <li key={idx} className="flex items-start space-x-3">
+                                        <span className="text-[#0045ac] mt-1">📋</span>
+                                        <span className="text-gray-700 text-sm lg:text-base">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Proceso */}
+                    {details.proceso && (
+                        <div className="detail-section bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">🔄</span>
+                                Proceso
+                            </h4>
+                            <ul className="space-y-3">
+                                {details.proceso.map((item, idx) => (
+                                    <li key={idx} className="flex items-start space-x-3">
+                                        <span className="text-[#0045ac] mt-1 font-bold">{idx + 1}.</span>
+                                        <span className="text-gray-700 text-sm lg:text-base">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Requisitos */}
+                    {details.requisitos && (
+                        <div className="detail-section bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">📝</span>
+                                Requisitos
+                            </h4>
+                            <ul className="space-y-3">
+                                {details.requisitos.map((item, idx) => (
+                                    <li key={idx} className="flex items-start space-x-3">
+                                        <span className="text-[#0045ac] mt-1 font-bold">•</span>
+                                        <span className="text-gray-700 text-sm lg:text-base">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Descripción adicional */}
+                    {details.descripcion && (
+                        <div className="detail-section bg-gradient-to-br from-gray-50 to-slate-50 rounded-2xl p-6 lg:col-span-2">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">ℹ️</span>
+                                Descripción Detallada
+                            </h4>
+                            <p className="text-gray-700 leading-relaxed text-sm lg:text-base">{details.descripcion}</p>
+                        </div>
+                    )}
+
+                    {/* Cobertura */}
+                    {details.cobertura && (
+                        <div className="detail-section bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">🌎</span>
+                                Cobertura
+                            </h4>
+                            <ul className="space-y-3">
+                                {details.cobertura.map((item, idx) => (
+                                    <li key={idx} className="flex items-start space-x-3">
+                                        <span className="text-[#0045ac] mt-1 font-bold">•</span>
+                                        <span className="text-gray-700 text-sm lg:text-base">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+
+                    {/* Requisitos Generales */}
+                    {details.requisitosGenerales && (
+                        <div className="detail-section bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">📋</span>
+                                Requisitos Generales
+                            </h4>
+                            <ul className="space-y-3">
+                                {details.requisitosGenerales.map((item, idx) => (
+                                    <li key={idx} className="flex items-start space-x-3">
+                                        <span className="text-[#0045ac] mt-1 font-bold">•</span>
+                                        <span className="text-gray-700 text-sm lg:text-base">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Persona Física */}
+                    {details.personaFisica && (
+                        <div className="detail-section bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">👤</span>
+                                Persona Física con Actividad Empresarial
+                            </h4>
+                            <ul className="space-y-3">
+                                {details.personaFisica.map((item, idx) => (
+                                    <li key={idx} className="flex items-start space-x-3">
+                                        <span className="text-green-500 mt-1 font-bold">✓</span>
+                                        <span className="text-gray-700 text-sm lg:text-base">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Persona Moral */}
+                    {details.personaMoral && (
+                        <div className="detail-section bg-gradient-to-br from-violet-50 to-purple-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">🏢</span>
+                                Persona Moral
+                            </h4>
+                            <ul className="space-y-3">
+                                {details.personaMoral.map((item, idx) => (
+                                    <li key={idx} className="flex items-start space-x-3">
+                                        <span className="text-green-500 mt-1 font-bold">✓</span>
+                                        <span className="text-gray-700 text-sm lg:text-base">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Documentos Financieros */}
+                    {details.documentosFinancieros && (
+                        <div className="detail-section bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl p-6">
+                            <h4 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
+                                <span className="mr-3 text-2xl">💰</span>
+                                Documentos Financieros
+                            </h4>
+                            <ul className="space-y-3">
+                                {details.documentosFinancieros.map((item, idx) => (
+                                    <li key={idx} className="flex items-start space-x-3">
+                                        <span className="text-[#0045ac] mt-1">📊</span>
+                                        <span className="text-gray-700 text-sm lg:text-base">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    </div>
                 </div>
-            </div>
+            )}
+
+            {/* Botón de acción - solo visible cuando está expandido */}
+            {isExpanded && (
+                <div className="text-center detail-section">
+                    <button
+                        onClick={() => {
+                            const contactForm = document.getElementById('contact-form') || document.querySelector('[id*="contact"]');
+                            if (contactForm) {
+                                contactForm.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        }}
+                        className="bg-gradient-to-r from-[#0045ac] to-[#0056d3] text-white py-4 px-12 rounded-full text-lg font-semibold hover:from-[#003a8c] hover:to-[#0045ac] transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                        Solicitar este crédito
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
@@ -290,70 +634,34 @@ const CreditCards = () => {
     const titleRef = useRef(null);
     const subtitleRef = useRef(null);
     const ctaRef = useRef(null);
-    const [selectedCard, setSelectedCard] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [scrollPosition, setScrollPosition] = useState(0);
+    const [expandedCard, setExpandedCard] = useState(null);
 
-    const handleMoreInfo = (cardData) => {
-        // Guardar posición actual del scroll
-        setScrollPosition(window.pageYOffset);
-        setSelectedCard(cardData);
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setSelectedCard(null);
-        document.body.style.overflow = 'unset';
-        document.body.style.position = 'static';
-        document.body.style.top = 'auto';
-        document.body.style.width = 'auto';
-        // Reanudar animaciones GSAP
-        gsap.globalTimeline.resume();
-        ScrollTrigger.refresh();
-        // Restaurar posición del scroll
-        window.scrollTo(0, scrollPosition);
-    };
-
-    // Manejar tecla ESC y bloqueo de scroll
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key === 'Escape' && isModalOpen) {
-                closeModal();
-            }
-        };
-
-        if (isModalOpen) {
-            document.addEventListener('keydown', handleKeyDown);
-            // Pausar todas las animaciones GSAP
-            gsap.globalTimeline.pause();
-            ScrollTrigger.refresh();
-            // Bloquear scroll del body manteniendo la posición
-            document.body.style.overflow = 'hidden';
-            document.body.style.position = 'fixed';
-            document.body.style.top = `-${scrollPosition}px`;
-            document.body.style.width = '100%';
+    const handleToggleCard = (cardId) => {
+        const wasExpanded = expandedCard === cardId;
+        
+        if (wasExpanded) {
+            // Si se está cerrando, no hacer scroll
+            setExpandedCard(null);
         } else {
-            document.body.style.overflow = 'unset';
-            document.body.style.position = 'static';
-            document.body.style.top = 'auto';
-            document.body.style.width = 'auto';
-            // Reanudar animaciones GSAP
-            gsap.globalTimeline.resume();
-            ScrollTrigger.refresh();
+            // Si se está abriendo una nueva tarjeta
+            setExpandedCard(cardId);
+            
+            // Hacer scroll suave hacia la tarjeta después de un pequeño delay
+            setTimeout(() => {
+                const cardElement = document.querySelector(`[data-card-id="${cardId}"]`);
+                if (cardElement) {
+                    const rect = cardElement.getBoundingClientRect();
+                    const scrollTop = window.pageYOffset;
+                    const targetTop = scrollTop + rect.top - 100; // 100px de margen superior
+                    
+                    window.scrollTo({
+                        top: targetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 300); // Delay para permitir que la animación de expansión comience
         }
-
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-            document.body.style.overflow = 'unset';
-            document.body.style.position = 'static';
-            document.body.style.top = 'auto';
-            document.body.style.width = 'auto';
-            // Asegurar que las animaciones se reanuden
-            gsap.globalTimeline.resume();
-            ScrollTrigger.refresh();
-        };
-    }, [isModalOpen]);
+    };
 
     useEffect(() => {
         const section = sectionRef.current;
@@ -434,17 +742,19 @@ const CreditCards = () => {
                 </div>
 
                 {/* Grid de cards */}
-                <div className="flex flex-col gap-8 lg:gap-12 items-center">
+                <div className="flex flex-col gap-12 lg:gap-16 xl:gap-20 items-center">
                     {creditCardsData.map((card, index) => (
                         <CreditCard
                             key={card.id}
+                            id={card.id}
                             title={card.title}
                             description={card.description}
                             image={card.image}
                             icon={card.icon}
                             details={card.details}
                             index={index}
-                            onMoreInfo={handleMoreInfo}
+                            isExpanded={expandedCard === card.id}
+                            onToggle={() => handleToggleCard(card.id)}
                         />
                     ))}
                 </div>
@@ -465,278 +775,6 @@ const CreditCards = () => {
                     </button>
                 </div>
             </div>
-
-            {/* Modal Completamente Nuevo */}
-            {isModalOpen && selectedCard && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
-                    style={{ touchAction: 'none' }}
-                >
-                    {/* Overlay */}
-                    <div
-                        className="absolute inset-0 bg-black bg-opacity-50"
-                        onClick={closeModal}
-                    ></div>
-
-                    {/* Modal Container */}
-                    <div className="relative bg-white rounded-2xl w-full max-w-4xl mx-4 max-h-[90vh] flex flex-col shadow-2xl">
-                        {/* Header Fijo */}
-                        <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
-                            <div className="flex items-center space-x-4">
-                                <img
-                                    src={selectedCard.image}
-                                    alt={selectedCard.title}
-                                    className="w-16 h-16 object-cover rounded-xl"
-                                />
-                                <div>
-                                    <h2 className="text-2xl font-bold text-gray-900">{selectedCard.title}</h2>
-                                    <p className="text-gray-600">Información detallada</p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={closeModal}
-                                className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-colors"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        {/* Contenido Scrolleable */}
-                        <div
-                            className="flex-1 overflow-y-auto p-6"
-                            onWheel={(e) => e.stopPropagation()}
-                            onTouchMove={(e) => e.stopPropagation()}
-                        >
-                            {/* Descripción */}
-                            <div className="mb-8">
-                                <p className="text-gray-700 leading-relaxed text-lg">{selectedCard.description}</p>
-                            </div>
-
-                            {/* Detalles específicos */}
-                            {selectedCard.details && (
-                                <div className="space-y-8">
-                                    {/* Características */}
-                                    {selectedCard.details.caracteristicas && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">✨</span>
-                                                Características
-                                            </h3>
-                                            <ul className="space-y-3">
-                                                {selectedCard.details.caracteristicas.map((item, index) => (
-                                                    <li key={index} className="flex items-start space-x-3">
-                                                        <span className="text-[#0045ac] mt-1">•</span>
-                                                        <span className="text-gray-700">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {/* Beneficios */}
-                                    {selectedCard.details.beneficios && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">🎯</span>
-                                                Beneficios
-                                            </h3>
-                                            <ul className="space-y-3">
-                                                {selectedCard.details.beneficios.map((item, index) => (
-                                                    <li key={index} className="flex items-start space-x-3">
-                                                        <span className="text-green-500 mt-1">✓</span>
-                                                        <span className="text-gray-700">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {/* Documentos */}
-                                    {selectedCard.details.documentos && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">📄</span>
-                                                Documentos Requeridos
-                                            </h3>
-                                            <ul className="space-y-3">
-                                                {selectedCard.details.documentos.map((item, index) => (
-                                                    <li key={index} className="flex items-start space-x-3">
-                                                        <span className="text-[#0045ac] mt-1">📋</span>
-                                                        <span className="text-gray-700">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {/* Proceso */}
-                                    {selectedCard.details.proceso && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">🔄</span>
-                                                Proceso
-                                            </h3>
-                                            <ul className="space-y-3">
-                                                {selectedCard.details.proceso.map((item, index) => (
-                                                    <li key={index} className="flex items-start space-x-3">
-                                                        <span className="text-[#0045ac] mt-1">{index + 1}.</span>
-                                                        <span className="text-gray-700">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {/* Requisitos */}
-                                    {selectedCard.details.requisitos && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">📝</span>
-                                                Requisitos
-                                            </h3>
-                                            <ul className="space-y-3">
-                                                {selectedCard.details.requisitos.map((item, index) => (
-                                                    <li key={index} className="flex items-start space-x-3">
-                                                        <span className="text-[#0045ac] mt-1">•</span>
-                                                        <span className="text-gray-700">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {/* Descripción adicional */}
-                                    {selectedCard.details.descripcion && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">ℹ️</span>
-                                                Descripción
-                                            </h3>
-                                            <p className="text-gray-700 leading-relaxed">{selectedCard.details.descripcion}</p>
-                                        </div>
-                                    )}
-
-                                    {/* Cobertura */}
-                                    {selectedCard.details.cobertura && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">🌎</span>
-                                                Cobertura
-                                            </h3>
-                                            <ul className="space-y-3">
-                                                {selectedCard.details.cobertura.map((item, index) => (
-                                                    <li key={index} className="flex items-start space-x-3">
-                                                        <span className="text-[#0045ac] mt-1">•</span>
-                                                        <span className="text-gray-700">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {/* Introducción PYME */}
-                                    {selectedCard.details.introduccion && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">🏭</span>
-                                                ¿Cómo obtener un crédito para PYMES?
-                                            </h3>
-                                            <p className="text-gray-700 leading-relaxed">{selectedCard.details.introduccion}</p>
-                                        </div>
-                                    )}
-
-                                    {/* Requisitos Generales */}
-                                    {selectedCard.details.requisitosGenerales && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">📋</span>
-                                                Requisitos Generales
-                                            </h3>
-                                            <ul className="space-y-3">
-                                                {selectedCard.details.requisitosGenerales.map((item, index) => (
-                                                    <li key={index} className="flex items-start space-x-3">
-                                                        <span className="text-[#0045ac] mt-1">•</span>
-                                                        <span className="text-gray-700">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {/* Persona Física */}
-                                    {selectedCard.details.personaFisica && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">👤</span>
-                                                Si eres Persona Física con Actividad Empresarial
-                                            </h3>
-                                            <ul className="space-y-3">
-                                                {selectedCard.details.personaFisica.map((item, index) => (
-                                                    <li key={index} className="flex items-start space-x-3">
-                                                        <span className="text-green-500 mt-1">✓</span>
-                                                        <span className="text-gray-700">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {/* Persona Moral */}
-                                    {selectedCard.details.personaMoral && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">🏢</span>
-                                                Si eres Persona Moral
-                                            </h3>
-                                            <ul className="space-y-3">
-                                                {selectedCard.details.personaMoral.map((item, index) => (
-                                                    <li key={index} className="flex items-start space-x-3">
-                                                        <span className="text-green-500 mt-1">✓</span>
-                                                        <span className="text-gray-700">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-
-                                    {/* Documentos Financieros */}
-                                    {selectedCard.details.documentosFinancieros && (
-                                        <div>
-                                            <h3 className="text-xl font-semibold text-[#0045ac] mb-4 flex items-center">
-                                                <span className="mr-2">💰</span>
-                                                Documentos Financieros
-                                            </h3>
-                                            <ul className="space-y-3">
-                                                {selectedCard.details.documentosFinancieros.map((item, index) => (
-                                                    <li key={index} className="flex items-start space-x-3">
-                                                        <span className="text-[#0045ac] mt-1">📊</span>
-                                                        <span className="text-gray-700">{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Footer Fijo con Botón */}
-                        <div className="flex-shrink-0 p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
-                            <button
-                                onClick={() => {
-                                    closeModal();
-                                    document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' });
-                                }}
-                                className="w-full bg-[#0045ac] text-white py-4 px-6 rounded-full text-lg font-semibold hover:bg-[#003a8c] transition-colors duration-200 shadow-lg hover:shadow-xl"
-                            >
-                                Solicitar este crédito
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </section>
     );
 };

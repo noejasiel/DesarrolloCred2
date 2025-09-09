@@ -12,7 +12,7 @@ const Footer = () => {
                 <img src="/logo.png" alt="Logo" width={60} height={60} className="rounded-lg" />
                 <div>
                   <h3 className="text-lg font-bold text-[#0045ac]">DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL</h3>
-                  <p className="text-sm text-gray-600">componentes biffer</p>
+                  <p className="text-sm text-gray-600">componentes vifer</p>
                 </div>
               </div>
               <p className="text-gray-600 leading-relaxed max-w-md">
@@ -54,8 +54,8 @@ const Footer = () => {
               {/* Leyenda legal */}
               <div className="text-sm text-gray-500 leading-relaxed">
                 <p>
-                  {brand.name} es un producto de Componentes Biffer®. <br />
-                  {brand.name}® es una marca registrada propiedad Componentes Biffer®.
+                  {brand.name} es un producto de Componentes Vifer®. <br />
+                  {brand.name}® es una marca registrada propiedad Componentes Vifer®.
                 </p>
               </div>
 

@@ -49,7 +49,7 @@ export const LayersSectionLast = ({
                         <Image
                             ref={(el) => (imageCelRefs.current[position] = el)}
                             src="/imgCel.webp"
-                            alt="Celular Fondea"
+                            alt="Celular"
                             width={200}
                             height={400}
                             className="object-contain w-full h-auto"
@@ -61,7 +61,7 @@ export const LayersSectionLast = ({
                         <Image
                             ref={(el) => (imagePcRefs.current[position] = el)}
                             src="/imgPC.webp"
-                            alt="Tablet Fondea"
+                            alt="Tablet"
                             width={600}
                             height={400}
                             className="object-contain w-full h-auto"

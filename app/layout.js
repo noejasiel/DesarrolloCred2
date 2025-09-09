@@ -5,12 +5,12 @@ import Header from '../components/Header'
 import Features from './sections/Features'
 
 export const metadata = {
-  title: 'DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL | Componentes Biffer',
+  title: 'DESARROLLO CREDITICIO PERSONAL Y EMPRESARIAL | Componentes Vifer',
   description: 'Especialistas en asesoría crediticia personal y empresarial. Te ayudamos a obtener créditos personales, empresariales, hipotecarios y agrícolas con las mejores condiciones del mercado. Contacto: +52 (55) 93-14-65-04',
-  keywords: 'créditos personales, créditos empresariales, créditos hipotecarios, créditos agrícolas, asesoría crediticia, financiamiento, préstamos, Componentes Biffer, desarrollo crediticio',
-  authors: [{ name: 'Componentes Biffer' }],
-  creator: 'Componentes Biffer',
-  publisher: 'Componentes Biffer',
+  keywords: 'créditos personales, créditos empresariales, créditos hipotecarios, créditos agrícolas, asesoría crediticia, financiamiento, préstamos, Componentes Vifer, desarrollo crediticio',
+  authors: [{ name: 'Componentes Vifer' }],
+  creator: 'Componentes Vifer',
+  publisher: 'Componentes Vifer',
   formatDetection: {
     email: false,
     address: false,
@@ -30,7 +30,7 @@ export const metadata = {
         url: '/logo.png',
         width: 1200,
         height: 630,
-        alt: 'Desarrollo Crediticio Personal y Empresarial - Componentes Biffer',
+        alt: 'Desarrollo Crediticio Personal y Empresarial - Componentes Vifer',
       },
     ],
     locale: 'es_MX',
