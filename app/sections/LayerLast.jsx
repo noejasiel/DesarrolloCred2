@@ -201,7 +201,6 @@ export default function LayerLast() {
       />
 
       <section className=" w-full h-[30vh] px-12 bg-black relative overflow-hidden">
-        {/* Texto Fondeadora */}
         <div className="text-center">
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">
             {brand.name.split('').map((letter, i) => (
