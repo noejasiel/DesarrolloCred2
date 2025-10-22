@@ -96,7 +96,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
+      <Script id="gtm-head" strategy="beforeInteractive">
+        {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KFM2F5QJ');`}
+      </Script>
       <body className="font-body" style={{ backgroundColor: 'var(--color-background)', color: 'var(--color-foreground)', fontFamily: 'var(--font-body)' }}>
+        <noscript>
+          <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KFM2F5QJ" height="0" width="0" style={{ display: 'none', visibility: 'hidden' }} />
+        </noscript>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-17545432662"
           strategy="afterInteractive"
@@ -109,7 +119,7 @@ gtag('config', 'AW-17545432662');`}
         </Script>
         <ScrollWrapper>
           {children}
-         {/*  <Features /> */}
+          {/*  <Features /> */}
         </ScrollWrapper>
       </body>
     </html>
