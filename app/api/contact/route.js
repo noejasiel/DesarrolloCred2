@@ -1,8 +1,6 @@
 import { Resend } from 'resend';
 import { brand } from '../../config/brand'
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req) {
 
   // Verificar que la API key esté configurada
@@ -16,6 +14,9 @@ export async function POST(req) {
       headers: { 'Content-Type': 'application/json' },
     });
   }
+
+  // Inicializar Resend solo después de verificar que la API key existe
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
     const body = await req.json();
