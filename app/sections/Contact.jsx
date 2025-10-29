@@ -190,10 +190,9 @@ export default function ContactForm() {
                 </p>
               </div>
               <div className="space-y-8">
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  Nos especializamos en colocar tus créditos en instituciones bancarias confiables, facilitando opciones
-                  que se adaptan a tu situación.
-                </p>
+                 <p className="text-lg text-gray-700 leading-relaxed">
+                  Nos especializamos en creditos personales, empresariales, hipotecarios, agrícolas y de negocio.
+                </p> 
                 <p className="text-lg text-gray-700 leading-relaxed">
                   Completa el formulario y un asesor se pondrá en contacto contigo para ayudarte a tomar el mejor camino
                   financiero.
